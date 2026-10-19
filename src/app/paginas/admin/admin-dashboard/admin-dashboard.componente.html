@@ -1,0 +1,105 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Bienvenido al panel de administración de EcoTech</p>
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="cargando" class="loader-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas-grid" *ngIf="!cargando">
+    <mat-card
+      *ngFor="let stat of estadisticas"
+      class="stat-card"
+      [style.border-left-color]="stat.color">
+      <mat-card-content class="stat-content">
+        <div class="stat-icono" [style.background-color]="stat.color + '20'">
+          <mat-icon [style.color]="stat.color">{{ stat.icono }}</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stat.valor }}</h3>
+          <p>{{ stat.titulo }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="acciones-rapidas">
+    <h2>Acciones Rápidas</h2>
+    <div class="acciones-grid">
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/eventos')">
+          <mat-icon class="accion-icono">event</mat-icon>
+          <h3>Crear Evento</h3>
+          <p>Añade un nuevo evento sostenible</p>
+        </button>
+      </mat-card>
+
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/productos')">
+          <mat-icon class="accion-icono">card_giftcard</mat-icon>
+          <h3>Añadir Producto</h3>
+          <p>Agrega productos para canje</p>
+        </button>
+      </mat-card>
+
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/usuarios')">
+          <mat-icon class="accion-icono">people</mat-icon>
+          <h3>Ver Usuarios</h3>
+          <p>Gestiona los usuarios registrados</p>
+        </button>
+      </mat-card>
+
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/depositos')">
+          <mat-icon class="accion-icono">location_on</mat-icon>
+          <h3>Ver Depósitos</h3>
+          <p>Gestiona los depósitos registrados</p>
+        </button>
+      </mat-card>
+
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/canjes')">
+          <mat-icon class="accion-icono">swap_horiz</mat-icon>
+          <h3>Ver Canjes</h3>
+          <p>Gestiona los canjes solicitados</p>
+        </button>
+      </mat-card>
+
+      <mat-card class="accion-card">
+        <button mat-flat-button class="accion-button" (click)="navegarA('/admin/reportes')">
+          <mat-icon class="accion-icono">bar_chart</mat-icon>
+          <h3>Ver Reportes</h3>
+          <p>Analiza estadísticas detalladas</p>
+        </button>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Actividades recientes -->
+  <mat-card class="actividades-recientes">
+    <mat-card-header>
+      <mat-card-title>Actividad Reciente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list *ngIf="actividadesRecientes.length > 0">
+        <mat-list-item *ngFor="let actividad of actividadesRecientes" class="actividad-item">
+          <mat-icon matListItemIcon class="actividad-icono">{{ actividad.icono }}</mat-icon>
+          <div matListItemTitle class="actividad-mensaje">{{ actividad.mensaje }}</div>
+          <div matListItemLine class="actividad-fecha">{{ formatearFecha(actividad.fecha) }}</div>
+        </mat-list-item>
+      </mat-list>
+
+      <div *ngIf="actividadesRecientes.length === 0" class="sin-actividades">
+        <mat-icon>info</mat-icon>
+        <p>No hay actividades recientes</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

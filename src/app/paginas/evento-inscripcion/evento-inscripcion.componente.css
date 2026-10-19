@@ -1,0 +1,375 @@
+.inscripcion-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 120px 30px 60px;
+}
+
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-overlay p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.mensaje-card {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mensaje-card mat-card-content {
+  padding: 60px 40px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.icon-mensaje {
+  font-size: 80px !important;
+  width: 80px !important;
+  height: 80px !important;
+}
+
+.mensaje-card h2 {
+  font-size: 32px;
+  color: #1a1a1a;
+  margin: 0;
+  font-weight: 700;
+}
+
+.mensaje-card p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+.botones-mensaje {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ========== HEADER ========== */
+.inscripcion-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.inscripcion-header h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.inscripcion-header p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* ========== MAIN CONTENT ========== */
+.inscripcion-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* ========== CARD DE INFORMACIÓN DEL EVENTO ========== */
+.evento-info-card {
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.evento-info-card mat-card-header {
+  padding: 24px 24px 16px !important;
+}
+
+.avatar-icon {
+  background: #1a4d2e !important;
+  color: white !important;
+  font-size: 32px !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.evento-info-card mat-card-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a;
+}
+
+.evento-info-card mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+.evento-descripcion {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
+.evento-info-card mat-divider {
+  margin: 20px 0;
+}
+
+/* Lista de detalles */
+.evento-detalles {
+  padding: 0 !important;
+}
+
+.evento-detalles mat-list-item {
+  height: auto !important;
+  min-height: 60px;
+  padding: 12px 0 !important;
+}
+
+::ng-deep .evento-detalles .mat-mdc-list-item-icon {
+  color: #1a4d2e;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+::ng-deep .evento-detalles .mdc-list-item__primary-text {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+::ng-deep .evento-detalles .mdc-list-item__secondary-text {
+  font-size: 15px;
+  color: #666;
+}
+
+/* ========== CARD DEL FORMULARIO ========== */
+.formulario-card mat-card-header {
+  padding: 24px 24px 16px !important;
+}
+
+.formulario-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a;
+}
+
+.formulario-card mat-card-title mat-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  color: #1a4d2e;
+}
+
+.formulario-card mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+/* Form fields */
+.field-full {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Checkbox de términos */
+.terminos-checkbox {
+  margin: 24px 0;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+::ng-deep .terminos-checkbox .mdc-label {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Error del formulario */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.form-error mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* ========== INFO CARD ========== */
+.info-card {
+  margin: 24px 0;
+  background: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+}
+
+.info-card mat-card-header {
+  padding: 16px !important;
+}
+
+.info-icon {
+  background: #4CAF50 !important;
+  color: white !important;
+  font-size: 24px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.info-card mat-card-title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #1a1a1a;
+}
+
+.info-card mat-card-content {
+  padding: 0 16px 16px !important;
+}
+
+.info-card mat-list {
+  padding: 0 !important;
+}
+
+.info-card mat-list-item {
+  height: auto !important;
+  min-height: 40px;
+  padding: 8px 0 !important;
+}
+
+.check-icon {
+  color: #4CAF50 !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+::ng-deep .info-card .mdc-list-item__primary-text {
+  font-size: 14px;
+  color: #333;
+}
+
+/* ========== BOTONES DE ACCIÓN ========== */
+.botones-accion {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 12px;
+}
+
+.btn-inscribirse,
+.btn-cancelar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600 !important;
+}
+
+.btn-inscribirse mat-icon,
+.btn-cancelar mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 968px) {
+  .inscripcion-container {
+    padding: 100px 20px 40px;
+  }
+
+  .inscripcion-header h1 {
+    font-size: 28px;
+  }
+
+  .inscripcion-main {
+    grid-template-columns: 1fr;
+  }
+
+  .evento-info-card {
+    position: relative;
+    top: 0;
+  }
+
+  .botones-accion {
+    flex-direction: column;
+  }
+
+  .btn-inscribirse,
+  .btn-cancelar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .inscripcion-container {
+    padding: 80px 15px 40px;
+  }
+
+  .inscripcion-header h1 {
+    font-size: 24px;
+  }
+
+  .mensaje-card mat-card-content {
+    padding: 40px 24px !important;
+  }
+
+  .icon-mensaje {
+    font-size: 60px !important;
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .mensaje-card h2 {
+    font-size: 24px;
+  }
+
+  .evento-info-card mat-card-title,
+  .formulario-card mat-card-title {
+    font-size: 20px !important;
+  }
+
+  .botones-mensaje {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .botones-mensaje button {
+    width: 100%;
+  }
+}

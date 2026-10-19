@@ -1,0 +1,221 @@
+/* Hero Section */
+.contactanos-hero {
+  height: 40vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  url('https://i.pinimg.com/1200x/0f/ba/17/0fba178a547f22db923c5e1de2e1a9b6.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+
+.contactanos-hero h1 {
+  font-size: 56px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Contenido Principal */
+.contactanos-contenido {
+  padding: 80px 60px;
+  background: #f5f5f5;
+}
+
+.contacto-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Info de Contacto */
+.info-contacto {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ilustracion {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.ilustracion img {
+  max-width: 250px;
+  height: auto;
+}
+
+.atencion-cliente h2 {
+  font-size: 28px;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.subtitulo {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.medio-contacto {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.medio-contacto .label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.medio-contacto .link {
+  font-size: 16px;
+  color: #2196F3;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.medio-contacto .link:hover {
+  color: #1976D2;
+  text-decoration: underline;
+}
+
+.redes-sociales {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.social-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.social-icon:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon.whatsapp {
+  background: #25D366;
+}
+
+.social-icon.facebook {
+  background: #1877F2;
+}
+
+.social-icon.instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.social-icon.twitter {
+  background: #1DA1F2;
+}
+
+/* Formulario */
+.formulario-contacto {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-contacto h2 {
+  font-size: 28px;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1a4d2e;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-enviar {
+  background: #1a4d2e;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 10px;
+}
+
+.btn-enviar:hover {
+  background: #0d2818;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .contactanos-hero h1 {
+    font-size: 36px;
+  }
+
+  .contactanos-contenido {
+    padding: 40px 30px;
+  }
+
+  .contacto-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .info-contacto,
+  .formulario-contacto {
+    padding: 30px;
+  }
+}

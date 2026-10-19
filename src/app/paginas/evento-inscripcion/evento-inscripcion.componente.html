@@ -1,0 +1,190 @@
+<div class="inscripcion-container">
+
+  <div *ngIf="cargando" class="loading-overlay">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando información del evento...</p>
+  </div>
+
+  <mat-card *ngIf="error && !cargando" class="mensaje-card error-card">
+    <mat-card-content>
+      <mat-icon color="warn" class="icon-mensaje">error</mat-icon>
+      <h2>Error</h2>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="cancelar()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a eventos
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="yaInscrito && !cargando" class="mensaje-card inscrito-card">
+    <mat-card-content>
+      <mat-icon color="primary" class="icon-mensaje">check_circle</mat-icon>
+      <h2>Ya estás inscrito</h2>
+      <p>Ya te has inscrito en este evento.</p>
+      <div class="botones-mensaje">
+        <button mat-raised-button color="primary" routerLink="/mis-eventos">
+          <mat-icon>event</mat-icon>
+          Ver mis eventos
+        </button>
+        <button mat-stroked-button (click)="cancelar()">
+          <mat-icon>arrow_back</mat-icon>
+          Volver
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="evento && !cargando && !yaInscrito" class="inscripcion-content">
+    <div class="inscripcion-header">
+      <h1>Inscripción al Evento</h1>
+      <p>Completa tu inscripción para participar</p>
+    </div>
+
+    <div class="inscripcion-main">
+      <mat-card class="evento-info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="avatar-icon">event</mat-icon>
+          <mat-card-title>{{ evento.nombre }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="evento-descripcion">{{ evento.descripcion }}</p>
+
+          <mat-divider></mat-divider>
+
+          <mat-list class="evento-detalles">
+            <mat-list-item>
+              <mat-icon matListItemIcon>place</mat-icon>
+              <div matListItemTitle>Lugar</div>
+              <div matListItemLine>{{ evento.lugar }}</div>
+            </mat-list-item>
+
+            <mat-list-item>
+              <mat-icon matListItemIcon>calendar_today</mat-icon>
+              <div matListItemTitle>Fecha</div>
+              <div matListItemLine>{{ formatearFecha(evento.fecha) }}</div>
+            </mat-list-item>
+
+            <mat-list-item>
+              <mat-icon matListItemIcon>access_time</mat-icon>
+              <div matListItemTitle>Hora</div>
+              <div matListItemLine *ngIf="evento.horaInicio && evento.horaFin">
+                {{ evento.horaInicio }} - {{ evento.horaFin }}
+              </div>
+              <div matListItemLine *ngIf="!evento.horaInicio || !evento.horaFin">
+                Por confirmar
+              </div>
+            </mat-list-item>
+
+            <mat-list-item>
+              <mat-icon matListItemIcon>stars</mat-icon>
+              <div matListItemTitle>Eco-Puntos</div>
+              <div matListItemLine>{{ evento.puntos }} puntos por asistir</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="formulario-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>edit_note</mat-icon>
+            Datos de Inscripción
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form (submit)="inscribirse(); $event.preventDefault()">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>Email registrado</mat-label>
+              <input
+                matInput
+                type="email"
+                [value]="usuarioActual?.email"
+                disabled>
+              <mat-icon matPrefix>email</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>¿Por qué quieres participar? (Opcional)</mat-label>
+              <textarea
+                matInput
+                [(ngModel)]="motivoParticipacion"
+                name="motivo"
+                rows="4"
+                placeholder="Cuéntanos por qué te interesa este evento..."
+                [disabled]="inscribiendo"></textarea>
+              <mat-icon matPrefix>comment</mat-icon>
+            </mat-form-field>
+
+
+            <mat-checkbox
+              [(ngModel)]="aceptaTerminos"
+              name="terminos"
+              [disabled]="inscribiendo"
+              color="primary"
+              class="terminos-checkbox"
+              required>
+              Acepto los términos y condiciones. Me comprometo a asistir al evento y notificar si no puedo hacerlo.
+            </mat-checkbox>
+
+            <mat-error *ngIf="error" class="form-error">
+              <mat-icon>error</mat-icon>
+              {{ error }}
+            </mat-error>
+
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="info-icon">info</mat-icon>
+                <mat-card-title>Información Importante</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-list>
+                  <mat-list-item>
+                    <mat-icon matListItemIcon class="check-icon">check</mat-icon>
+                    <span matListItemTitle>Recibirás una confirmación por email</span>
+                  </mat-list-item>
+                  <mat-list-item>
+                    <mat-icon matListItemIcon class="check-icon">check</mat-icon>
+                    <span matListItemTitle>Ganarás {{ evento.puntos }} Eco-Puntos al asistir</span>
+                  </mat-list-item>
+                  <mat-list-item>
+                    <mat-icon matListItemIcon class="check-icon">check</mat-icon>
+                    <span matListItemTitle>Debes llegar 15 minutos antes del evento</span>
+                  </mat-list-item>
+                  <mat-list-item>
+                    <mat-icon matListItemIcon class="check-icon">check</mat-icon>
+                    <span matListItemTitle>Puedes cancelar tu inscripción hasta 24h antes</span>
+                  </mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions class="botones-accion">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="inscribirse()"
+            [disabled]="inscribiendo || !aceptaTerminos"
+            class="btn-inscribirse">
+            <mat-icon>{{ inscribiendo ? 'hourglass_empty' : 'check_circle' }}</mat-icon>
+            {{ inscribiendo ? 'Inscribiendo...' : 'Confirmar Inscripción' }}
+          </button>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelar()"
+            [disabled]="inscribiendo"
+            class="btn-cancelar">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

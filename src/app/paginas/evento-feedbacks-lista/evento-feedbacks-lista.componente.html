@@ -1,0 +1,99 @@
+<div class="feedbacks-container">
+  <mat-card class="feedbacks-card">
+    <mat-card-header class="header">
+      <button mat-stroked-button class="btn-back" (click)="volver()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+      <mat-card-title>
+        <mat-icon class="title-icon">comment</mat-icon>
+        Opiniones del Evento
+      </mat-card-title>
+      <mat-card-subtitle *ngIf="evento">{{ evento.nombre }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="cargando" class="loader">
+        <mat-spinner diameter="60"></mat-spinner>
+        <p>Cargando feedbacks...</p>
+      </div>
+
+      <mat-card *ngIf="!cargando && feedbacks.length > 0" class="resumen-card">
+        <mat-card-content class="resumen-content">
+          <div class="promedio-section">
+            <div class="promedio-numero">{{ promedioCalificacion.toFixed(1) }}</div>
+            <div class="promedio-estrellas">
+              <mat-icon *ngFor="let estrella of obtenerEstrellas(Math.round(promedioCalificacion))"
+                        class="star-display"
+                        [class.filled]="estaLlena(estrella, Math.round(promedioCalificacion))">
+                {{ estaLlena(estrella, Math.round(promedioCalificacion)) ? 'star' : 'star_border' }}
+              </mat-icon>
+            </div>
+            <p class="total-feedbacks">
+              <mat-icon class="small-icon">people</mat-icon>
+              {{ feedbacks.length }} opiniones
+            </p>
+          </div>
+
+          <mat-divider [vertical]="true" class="divider-vertical"></mat-divider>
+
+          <div class="distribucion-section">
+            <div *ngFor="let num of [5, 4, 3, 2, 1]" class="distribucion-row">
+              <span class="numero">{{ num }}</span>
+              <mat-icon class="star-small">star</mat-icon>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="obtenerDistribucionEstrellas(num)"
+                class="barra-progreso">
+              </mat-progress-bar>
+              <span class="porcentaje">{{ obtenerDistribucionEstrellas(num).toFixed(0) }}%</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+
+      <div *ngIf="!cargando" class="feedbacks-list">
+        <div *ngIf="feedbacks.length === 0" class="empty-state">
+          <mat-icon class="empty-icon">chat_bubble_outline</mat-icon>
+          <p>Aún no hay opiniones para este evento</p>
+          <p class="subtitle">Sé el primero en dejar tu feedback</p>
+        </div>
+
+        <mat-card *ngFor="let feedback of feedbacks" class="feedback-item">
+          <mat-card-header class="feedback-header">
+            <div mat-card-avatar class="user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <mat-card-title class="user-name">
+              {{ feedback.usuario?.nombre || 'Usuario' }}
+              {{ feedback.usuario?.apellidos || '#' + feedback.idUsuario }}
+            </mat-card-title>
+            <mat-card-subtitle class="feedback-date">
+              <mat-icon class="date-icon">schedule</mat-icon>
+              {{ formatearFecha(feedback.fecha!) }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content class="feedback-body">
+            <div class="feedback-rating">
+              <mat-icon *ngFor="let estrella of obtenerEstrellas(feedback.puntuacion)"
+                        class="star-rating"
+                        [class.filled]="estaLlena(estrella, feedback.puntuacion)">
+                {{ estaLlena(estrella, feedback.puntuacion) ? 'star' : 'star_border' }}
+              </mat-icon>
+            </div>
+            <p class="feedback-comentario">{{ feedback.comentario }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card *ngIf="error" class="error-card">
+        <mat-card-content class="error-content">
+          <mat-icon color="warn">warning</mat-icon>
+          <span>{{ error }}</span>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

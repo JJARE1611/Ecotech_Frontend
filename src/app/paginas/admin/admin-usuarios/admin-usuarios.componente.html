@@ -1,0 +1,342 @@
+<div class="admin-usuarios-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <h1>Gestión de Usuarios</h1>
+    <p class="subtitle">Administra los usuarios del sistema</p>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas-usuarios">
+    <mat-card class="stat-card total">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icono">people</mat-icon>
+          <div class="stat-info">
+            <h3>{{ usuarios.length }}</h3>
+            <p>Total Usuarios</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card filtrados">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icono">search</mat-icon>
+          <div class="stat-info">
+            <h3>{{ usuariosFiltrados.length }}</h3>
+            <p>Resultados</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Búsqueda -->
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="busqueda-field">
+        <mat-label>Buscar usuarios</mat-label>
+        <input
+          matInput
+          [(ngModel)]="busqueda"
+          (input)="aplicarFiltros()"
+          placeholder="Buscar por email, nombre o apellidos...">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarUsuarios()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de Usuarios -->
+  <mat-card *ngIf="!cargando && !error" class="tabla-card">
+    <div class="tabla-container">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Completo</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let usuario of usuariosFiltrados">
+          <td>{{ usuario.id }}</td>
+          <td>
+            <strong>{{ usuario.nombre }} {{ usuario.apellidos }}</strong>
+          </td>
+          <td>
+            <span class="email-text">{{ usuario.email }}</span>
+          </td>
+          <td>{{ usuario.telefono }}</td>
+          <td class="direccion-cell">{{ usuario.direccion }}</td>
+          <td>
+            <div class="acciones">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="verDetalle(usuario)"
+                matTooltip="Ver detalle">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="abrirModalEdicion(usuario)"
+                matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="eliminarUsuario(usuario)"
+                matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="usuariosFiltrados.length === 0" class="sin-usuarios">
+        <mat-icon class="icon-vacio">search_off</mat-icon>
+        <p>No se encontraron usuarios con esos criterios</p>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Modal de Detalle -->
+<div class="modal-overlay" *ngIf="modalDetalle" (click)="cerrarModalDetalle()">
+  <mat-card class="modal-content modal-grande" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>person</mat-icon>
+        Detalle del Usuario
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModalDetalle()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="usuario-detalle" *ngIf="usuarioSeleccionado">
+
+        <!-- Información básica -->
+        <div class="detalle-seccion">
+          <h3>
+            <mat-icon>account_circle</mat-icon>
+            Información Personal
+          </h3>
+          <div class="detalle-grid">
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>tag</mat-icon>
+                  ID
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.id }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>person</mat-icon>
+                  Nombre
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.nombre }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>person_outline</mat-icon>
+                  Apellidos
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.apellidos }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>email</mat-icon>
+                  Email
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.email }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>phone</mat-icon>
+                  Teléfono
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.telefono }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item full-width">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>location_on</mat-icon>
+                  Dirección
+                </span>
+                <span class="valor">{{ usuarioSeleccionado.direccion }}</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Eco-Puntos -->
+        <div class="detalle-seccion" *ngIf="!cargandoEstadisticas && estadisticasUsuario">
+          <h3>
+            <mat-icon>stars</mat-icon>
+            Eco-Puntos
+          </h3>
+          <div class="puntos-display">
+            <mat-card class="puntos-card">
+              <mat-card-content>
+                <mat-icon class="puntos-icono">grade</mat-icon>
+                <div class="puntos-info">
+                  <span class="puntos-valor">{{ estadisticasUsuario.puntosDisponibles }}</span>
+                  <span class="puntos-label">Puntos Disponibles</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <div *ngIf="cargandoEstadisticas" class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando información...</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Modal de Edición -->
+<div class="modal-overlay" *ngIf="modalEdicion" (click)="cerrarModalEdicion()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>edit</mat-icon>
+        Editar Usuario
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModalEdicion()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (submit)="guardarUsuario(); $event.preventDefault()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email (no editable)</mat-label>
+          <input
+            matInput
+            [value]="usuarioEditando?.email"
+            disabled>
+          <mat-icon matPrefix>email</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input
+              matInput
+              [(ngModel)]="nombre"
+              name="nombre"
+              placeholder="Nombre del usuario"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input
+              matInput
+              [(ngModel)]="apellidos"
+              name="apellidos"
+              placeholder="Apellidos del usuario"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>person_outline</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input
+            matInput
+            type="tel"
+            [(ngModel)]="telefono"
+            name="telefono"
+            placeholder="+51 999 999 999"
+            [disabled]="guardando"
+            required>
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="direccion"
+            name="direccion"
+            rows="3"
+            placeholder="Dirección completa"
+            [disabled]="guardando"
+            required></textarea>
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+
+        <mat-error *ngIf="errorFormulario" class="form-error">
+          <mat-icon>error</mat-icon>
+          {{ errorFormulario }}
+        </mat-error>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        (click)="cerrarModalEdicion()"
+        [disabled]="guardando">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="guardarUsuario()"
+        [disabled]="guardando">
+        <mat-icon>{{ guardando ? 'hourglass_empty' : 'save' }}</mat-icon>
+        {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

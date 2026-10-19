@@ -1,0 +1,770 @@
+.suscripcion-container {
+  min-height: 100vh;
+  padding: 120px 60px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+.loading-container {
+  text-align: center;
+  padding: 60px;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+
+.suscripcion-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.suscripcion-header h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+}
+
+
+.suscripcion-actual-card {
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  overflow: visible !important;
+}
+
+.suscripcion-actual-card .actual-header {
+  padding: 24px 24px 16px !important;
+}
+
+.suscripcion-actual-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: white !important;
+  margin: 0 !important;
+}
+
+.suscripcion-actual-card mat-icon {
+  color: white !important;
+}
+
+.actual-content {
+  display: grid;
+  grid-template-columns: auto 2px 1fr;
+  gap: 30px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.actual-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actual-plan .plan-nombre {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.divider-vertical {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.actual-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-item mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 13px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.info-valor {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.dias-restantes {
+  color: #fff59d;
+}
+
+/* Plan Programado */
+.plan-programado-section {
+  margin-top: 24px;
+}
+
+.plan-programado-section mat-divider {
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.plan-programado-content {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.programado-header {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.programado-header mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.programado-info {
+  flex: 1;
+}
+
+.programado-info strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.programado-detalles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.programado-detalles mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.fecha-cambio {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.mensaje-cambio {
+  margin: 16px 0;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mensaje-cambio mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px !important;
+}
+
+.mensaje-cambio mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.mensaje-cambio p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.plan-programado-acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.plan-programado-acciones button {
+  flex: 1;
+}
+
+.suscripcion-actual-card mat-card-actions {
+  padding: 8px 24px 16px !important;
+  margin: 0 !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ========== PLANES ========== */
+.planes-section {
+  margin-bottom: 50px;
+}
+
+.planes-titulo {
+  font-size: 28px;
+  color: #1a1a1a;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.planes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 25px;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: visible !important;
+}
+
+.plan-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.plan-card.plan-actual {
+  border: 3px solid #4CAF50;
+}
+
+.plan-card.plan-destacado {
+  border: 3px solid #ff9800;
+  transform: scale(1.02);
+}
+
+.plan-card.plan-destacado:hover {
+  transform: scale(1.02) translateY(-10px);
+}
+
+.badge-actual,
+.badge-recomendado {
+  position: absolute;
+  z-index: 10;
+}
+
+.badge-actual {
+  top: 15px;
+  right: 15px;
+}
+
+.badge-recomendado {
+  top: 15px;
+  left: 15px;
+}
+
+.plan-header {
+  padding: 40px 30px;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.plan-icon {
+  font-size: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
+  margin-bottom: 16px;
+}
+
+.plan-header .plan-nombre {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.plan-precio {
+  margin-bottom: 20px;
+}
+
+.precio-valor {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  display: block;
+}
+
+.precio-duracion {
+  font-size: 16px;
+  opacity: 0.9;
+  display: block;
+  margin-top: 4px;
+}
+
+.multiplicador-chip {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+.plan-card mat-card-content {
+  flex: 1;
+  padding: 30px !important;
+}
+
+.plan-beneficios h4 {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+.plan-beneficios mat-list {
+  padding: 0;
+}
+
+.plan-beneficios mat-list-item {
+  height: auto !important;
+  padding: 8px 0 !important;
+  font-size: 14px;
+  color: #333;
+}
+
+.plan-beneficios mat-icon {
+  color: #4CAF50;
+}
+
+.plan-card mat-card-actions {
+  padding: 20px 30px !important;
+  border-top: 2px solid #f5f5f5;
+  margin: 0 !important;
+}
+
+.plan-card mat-card-actions button {
+  width: 100%;
+}
+
+.plan-gratuito {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.plan-gratuito span {
+  color: #666;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.plan-gratuito button {
+  width: 100%;
+}
+
+/* ========== HISTORIAL ========== */
+.historial-card {
+  margin-top: 50px;
+}
+
+.historial-card mat-card-header {
+  padding: 24px 24px 0 !important;
+}
+
+.historial-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.historial-card mat-card-content {
+  padding: 24px !important;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.historial-table {
+  width: 100%;
+  min-width: 800px;
+}
+
+::ng-deep .historial-table {
+  mat-header-cell {
+    background: #f8f8f8;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #666;
+    padding: 16px;
+  }
+
+  mat-cell {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  mat-row {
+    transition: background-color 0.2s;
+  }
+
+  mat-row:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px !important;
+}
+
+.modal-content mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  margin: 0 !important;
+}
+
+.btn-cerrar {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+}
+
+.modal-content mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+.modal-plan-info {
+  background: #f8f8f8;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-plan-info h3 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+}
+
+.modal-precio {
+  margin-bottom: 16px;
+}
+
+.precio-grande {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+}
+
+.precio-periodo {
+  font-size: 16px;
+  color: #666;
+  display: block;
+  margin-top: 4px;
+}
+
+.modal-multiplicador {
+  margin-top: 16px;
+}
+
+.modal-content mat-divider {
+  margin: 20px 0;
+}
+
+.modal-beneficios {
+  margin: 20px 0;
+}
+
+.modal-beneficios h4 {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+}
+
+.modal-beneficios mat-list {
+  padding: 0;
+}
+
+.modal-beneficios mat-list-item {
+  height: auto !important;
+  padding: 8px 0 !important;
+  font-size: 14px;
+}
+
+.modal-info-accion {
+  margin: 20px 0;
+}
+
+.info-card {
+  margin-bottom: 12px;
+}
+
+.info-card mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px !important;
+}
+
+.info-card mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.info-card.upgrade {
+  background: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+}
+
+.info-card.downgrade {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+}
+
+.info-card.renovar {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+.info-card.crear {
+  background: #f3e5f5;
+  border-left: 4px solid #9c27b0;
+}
+
+.modal-pago {
+  background: #e3f2fd;
+  margin: 20px 0;
+}
+
+.modal-pago mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px !important;
+}
+
+.modal-pago mat-icon {
+  color: #1565c0;
+}
+
+.modal-pago p {
+  margin: 0;
+  font-size: 14px;
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.modal-content mat-card-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  margin: 0 !important;
+}
+
+/* Fix para z-index de overlays */
+::ng-deep .cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+/* Snackbar personalizado */
+::ng-deep .snackbar-success {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+  .suscripcion-container {
+    padding: 100px 40px 40px;
+  }
+
+  .planes-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 968px) {
+  .suscripcion-container {
+    padding: 100px 20px 20px;
+  }
+
+  .suscripcion-header h1 {
+    font-size: 28px;
+  }
+
+  .actual-content {
+    grid-template-columns: 1fr;
+  }
+
+  .divider-vertical {
+    display: none;
+  }
+
+  .actual-plan {
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 20px;
+  }
+
+  .actual-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .planes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-card.plan-destacado {
+    transform: scale(1);
+  }
+
+  .plan-card.plan-destacado:hover {
+    transform: translateY(-10px);
+  }
+
+  .plan-programado-acciones {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media (max-width: 640px) {
+  .actual-info {
+    grid-template-columns: 1fr;
+  }
+
+  .precio-valor {
+    font-size: 36px;
+  }
+
+  .precio-grande {
+    font-size: 36px;
+  }
+
+  .plan-icon {
+    font-size: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .badge-actual,
+  .badge-recomendado {
+    position: static;
+    margin-bottom: 12px;
+  }
+}
+
+/* Animaciones suaves */
+mat-chip {
+  transition: transform 0.2s;
+}
+
+mat-chip:hover {
+  transform: scale(1.05);
+}
+
+button:focus-visible {
+  outline: 2px solid #1a4d2e;
+  outline-offset: 2px;
+}
+
+/* Mejoras de accesibilidad */
+button mat-icon {
+  vertical-align: middle;
+}
+
+mat-list-item {
+  cursor: default;
+}

@@ -1,0 +1,251 @@
+<div class="mis-eventos-container">
+
+  <div *ngIf="cargando" class="loading-overlay">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando tus eventos...</p>
+  </div>
+
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn" class="icon-error">error</mat-icon>
+      <h2>Error</h2>
+      <p>{{ error }}</p>
+      <div class="error-actions">
+        <button mat-raised-button color="primary" (click)="cargarMisEventos(usuarioActual!.idusuario!)">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
+        </button>
+        <button mat-stroked-button (click)="volverAEventos()">
+          <mat-icon>arrow_back</mat-icon>
+          Volver a Eventos
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="!cargando && !error && misEventos.length === 0" class="sin-eventos-card">
+    <mat-card-content>
+      <mat-icon class="icon-vacio">event_busy</mat-icon>
+      <h2>No tienes eventos inscritos</h2>
+      <p>Explora los eventos disponibles y empieza a ganar Eco-Puntos</p>
+      <button mat-raised-button color="primary" (click)="volverAEventos()">
+        <mat-icon>explore</mat-icon>
+        Explorar Eventos
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="!cargando && !error && misEventos.length > 0" class="eventos-content">
+    <div class="eventos-header">
+      <button mat-stroked-button class="btn-volver" (click)="volverAEventos()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a Eventos
+      </button>
+      <h1>Mis Eventos</h1>
+      <p class="subtitle">Eventos en los que estás inscrito</p>
+    </div>
+
+
+    <div class="estadisticas">
+      <mat-card class="stat-card stat-total">
+        <mat-card-content>
+          <mat-icon class="stat-icono">assessment</mat-icon>
+          <div class="stat-info">
+            <span class="stat-numero">{{ misEventos.length }}</span>
+            <span class="stat-label">Total Eventos</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-proximos">
+        <mat-card-content>
+          <mat-icon class="stat-icono">schedule</mat-icon>
+          <div class="stat-info">
+            <span class="stat-numero">{{ eventosProximos.length }}</span>
+            <span class="stat-label">Próximos</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-completados">
+        <mat-card-content>
+          <mat-icon class="stat-icono">check_circle</mat-icon>
+          <div class="stat-info">
+            <span class="stat-numero">{{ eventosPasados.length }}</span>
+            <span class="stat-label">Completados</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <section *ngIf="eventosProximos.length > 0" class="seccion-eventos">
+      <div class="seccion-header">
+        <h2 class="seccion-titulo">
+          <mat-icon>event_upcoming</mat-icon>
+          Próximos Eventos
+        </h2>
+        <mat-chip highlighted color="accent">
+          Puedes cancelar tu inscripción
+        </mat-chip>
+      </div>
+
+      <div class="eventos-grid">
+        <mat-card *ngFor="let inscripcion of eventosProximos" class="evento-card proximo">
+          <mat-chip-set class="evento-chips">
+            <mat-chip highlighted color="primary">
+              <mat-icon>schedule</mat-icon>
+              {{ obtenerMensajeDias(inscripcion.evento!.fecha) }}
+            </mat-chip>
+            <mat-chip highlighted color="accent">
+              <mat-icon>stars</mat-icon>
+              {{ inscripcion.evento?.puntos }} pts
+            </mat-chip>
+            <mat-chip highlighted>
+              <mat-icon>event</mat-icon>
+              Programado
+            </mat-chip>
+          </mat-chip-set>
+
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="avatar-icon">event</mat-icon>
+            <mat-card-title>{{ inscripcion.evento?.nombre }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="evento-descripcion">{{ inscripcion.evento?.descripcion }}</p>
+
+            <mat-list class="evento-detalles">
+              <mat-list-item>
+                <mat-icon matListItemIcon>calendar_today</mat-icon>
+                <span matListItemTitle>{{ formatearFecha(inscripcion.evento!.fecha) }}</span>
+              </mat-list-item>
+
+              <mat-list-item *ngIf="inscripcion.evento?.horaInicio && inscripcion.evento?.horaFin">
+                <mat-icon matListItemIcon>access_time</mat-icon>
+                <span matListItemTitle>{{ inscripcion.evento?.horaInicio }} - {{ inscripcion.evento?.horaFin }}</span>
+              </mat-list-item>
+
+              <mat-list-item>
+                <mat-icon matListItemIcon>place</mat-icon>
+                <span matListItemTitle>{{ inscripcion.evento?.lugar }}</span>
+              </mat-list-item>
+
+              <mat-list-item>
+                <mat-icon matListItemIcon>how_to_reg</mat-icon>
+                <span matListItemTitle>Inscrito: {{ formatearFecha(inscripcion.fechainscripcion) }}</span>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <div class="estado-confirmado">
+              <mat-icon color="primary">check_circle</mat-icon>
+              <span>Inscripción confirmada</span>
+            </div>
+            <button mat-raised-button
+                    color="warn"
+                    class="btn-cancelar"
+                    (click)="cancelarInscripcion(inscripcion)">
+              <mat-icon>cancel</mat-icon>
+              Cancelar Inscripción
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </section>
+
+    <section *ngIf="eventosPasados.length > 0" class="seccion-eventos">
+      <div class="seccion-header">
+        <h2 class="seccion-titulo">
+          <mat-icon>history</mat-icon>
+          Eventos Pasados
+        </h2>
+        <mat-chip highlighted>
+          <mat-icon>done</mat-icon>
+          Finalizados
+        </mat-chip>
+      </div>
+
+      <div class="eventos-grid">
+        <mat-card *ngFor="let inscripcion of eventosPasados" class="evento-card pasado">
+          <!-- Chip finalizado -->
+          <mat-chip-set class="evento-chips">
+            <mat-chip highlighted color="primary">
+              <mat-icon>check_circle</mat-icon>
+              Finalizado
+            </mat-chip>
+          </mat-chip-set>
+
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="avatar-icon">event_available</mat-icon>
+            <mat-card-title>{{ inscripcion.evento?.nombre }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <mat-list class="evento-info">
+              <mat-list-item>
+                <mat-icon matListItemIcon>calendar_today</mat-icon>
+                <span matListItemTitle>{{ formatearFecha(inscripcion.evento!.fecha) }}</span>
+              </mat-list-item>
+
+              <mat-list-item *ngIf="inscripcion.evento?.horaInicio && inscripcion.evento?.horaFin">
+                <mat-icon matListItemIcon>access_time</mat-icon>
+                <span matListItemTitle>{{ inscripcion.evento?.horaInicio }} - {{ inscripcion.evento?.horaFin }}</span>
+              </mat-list-item>
+
+              <mat-list-item>
+                <mat-icon matListItemIcon>place</mat-icon>
+                <span matListItemTitle>{{ inscripcion.evento?.lugar }}</span>
+              </mat-list-item>
+
+              <mat-list-item>
+                <mat-icon matListItemIcon>edit_note</mat-icon>
+                <span matListItemTitle>Inscrito el: {{ formatearFecha(inscripcion.fechainscripcion) }}</span>
+              </mat-list-item>
+            </mat-list>
+
+            <mat-card class="asistencia-card" [class.asistio]="inscripcion.asistio" [class.no-asistio]="!inscripcion.asistio">
+              <mat-card-content>
+                <div *ngIf="inscripcion.asistio" class="asistio-content">
+                  <mat-icon>check_circle</mat-icon>
+                  <div>
+                    <strong>Asististe - Ganaste {{ inscripcion.puntosotorgados }} puntos</strong>
+                    <p *ngIf="multiplicadorPuntos > 1" class="multiplicador-info">
+                      (×{{ multiplicadorPuntos }} {{ planUsuario }})
+                    </p>
+                  </div>
+                </div>
+                <div *ngIf="!inscripcion.asistio" class="no-asistio-content">
+                  <mat-icon>cancel</mat-icon>
+                  <span>No asististe</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-card-content>
+          <mat-card-actions *ngIf="inscripcion.asistio">
+            <button mat-raised-button
+                    color="primary"
+                    (click)="dejarFeedback(inscripcion.evento!.id!)">
+              <mat-icon>comment</mat-icon>
+              Dejar Feedback
+            </button>
+            <button mat-stroked-button
+                    color="primary"
+                    (click)="verFeedbacks(inscripcion.evento!.id!)">
+              <mat-icon>visibility</mat-icon>
+              Ver Opiniones
+            </button>
+          </mat-card-actions>
+
+          <mat-card-actions *ngIf="!inscripcion.asistio">
+            <button mat-stroked-button
+                    (click)="verFeedbacks(inscripcion.evento!.id!)">
+              <mat-icon>visibility</mat-icon>
+              Ver Opiniones del Evento
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </section>
+  </div>
+</div>

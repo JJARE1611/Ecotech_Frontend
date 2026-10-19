@@ -1,0 +1,385 @@
+.perfil-container {
+  min-height: 100vh;
+  padding: 120px 60px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 60px;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.error-card {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 30px;
+}
+
+.error-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+/* ========== HEADER ========== */
+.perfil-header {
+  margin-bottom: 40px;
+}
+
+.perfil-header h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.perfil-header p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* ========== CONTENT GRID ========== */
+.perfil-content {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 30px;
+}
+
+.perfil-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.perfil-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ========== CARD IZQUIERDA: FOTO ========== */
+.perfil-foto mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 30px !important;
+}
+
+.nombre-usuario {
+  font-size: 28px;
+  color: #1a1a1a;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+}
+
+.plan-chip {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.plan-chip mat-chip {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Foto de perfil */
+.foto-perfil-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.foto-perfil {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a4d2e 0%, #0d2818 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.imagen-perfil {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-icon {
+  font-size: 120px !important;
+  width: 120px !important;
+  height: 120px !important;
+  color: white;
+}
+
+.cambiar-foto-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cambiar-foto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #7fb843;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-cambiar-foto:hover {
+  background: #6a9c38;
+  transform: scale(1.05);
+}
+
+.fecha-vencimiento {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.fecha-vencimiento mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.perfil-foto mat-divider {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.botones-foto {
+  width: 100%;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.botones-edicion {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.botones-edicion button {
+  flex: 1;
+}
+
+/* ========== CARD DERECHA: DATOS ========== */
+.perfil-datos mat-card-header {
+  padding: 24px 24px 16px !important;
+}
+
+.perfil-datos mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 !important;
+}
+
+.perfil-datos mat-card-content {
+  padding: 20px 24px !important;
+}
+
+.perfil-datos mat-form-field {
+  margin-bottom: 8px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.campo-bloqueado {
+  opacity: 0.7;
+}
+
+.campo-bloqueado input {
+  cursor: not-allowed;
+}
+
+.perfil-datos mat-divider {
+  margin: 20px 0 0 0;
+}
+
+.perfil-datos mat-card-actions {
+  padding: 16px 24px !important;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.btn-accion {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px !important;
+}
+
+.modal-content mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  margin: 0 !important;
+}
+
+.btn-cerrar {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+}
+
+.modal-content mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+.modal-content mat-form-field {
+  margin-bottom: 8px;
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.form-error mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.modal-content mat-card-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  margin: 0 !important;
+}
+
+/* ========== SNACKBAR ========== */
+::ng-deep .snackbar-success {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 968px) {
+  .perfil-container {
+    padding: 100px 20px 20px;
+  }
+
+  .perfil-header h1 {
+    font-size: 28px;
+  }
+
+  .perfil-content {
+    grid-template-columns: 1fr;
+  }
+
+  .perfil-datos mat-card-actions {
+    flex-direction: column;
+  }
+
+  .btn-accion {
+    min-width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media (max-width: 640px) {
+  .botones-edicion {
+    flex-direction: column;
+  }
+}

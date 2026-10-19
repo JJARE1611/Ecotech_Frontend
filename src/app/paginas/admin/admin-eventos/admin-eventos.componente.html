@@ -1,0 +1,627 @@
+<div class="admin-eventos-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <h1>Gestión de Eventos</h1>
+    <button mat-raised-button color="primary" (click)="abrirModalCrear()">
+      <mat-icon>add</mat-icon>
+      Crear Nuevo Evento
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <div class="filtros-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <mat-select [(ngModel)]="filtroCategoria" (selectionChange)="aplicarFiltros()">
+            <mat-option value="">Todas las categorías</mat-option>
+            <mat-option *ngFor="let cat of categoriasDisponibles" [value]="cat">
+              {{ cat }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="filtroEstado" (selectionChange)="aplicarFiltros()">
+            <mat-option value="">Todos los estados</mat-option>
+            <mat-option value="programado">Programado</mat-option>
+            <mat-option value="en curso">En Curso</mat-option>
+            <mat-option value="finalizado">Finalizado</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          (click)="limpiarFiltros()"
+          *ngIf="filtroCategoria || filtroEstado">
+          <mat-icon>refresh</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando eventos...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarEventos()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de Eventos -->
+  <mat-card *ngIf="!cargando && !error" class="tabla-card">
+    <div class="tabla-container">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Lugar</th>
+          <th>Estado</th>
+          <th>Categoría</th>
+          <th>Tipo</th>
+          <th>Capacidad</th>
+          <th>Puntos</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let evento of eventos">
+          <td>{{ evento.id }}</td>
+          <td>
+            <strong>{{ evento.nombre }}</strong>
+            <p class="descripcion-corta">{{ evento.descripcion }}</p>
+          </td>
+          <td>{{ formatearFecha(evento.fecha) }}</td>
+          <td>
+              <span *ngIf="evento.horaInicio && evento.horaFin">
+                {{ evento.horaInicio }} - {{ evento.horaFin }}
+              </span>
+            <span *ngIf="!evento.horaInicio || !evento.horaFin" class="sin-dato">-</span>
+          </td>
+          <td>{{ evento.lugar }}</td>
+          <td>
+            <mat-chip [color]="obtenerColorEstadoEvento(evento.estadoEvento)" highlighted>
+              <mat-icon>{{ obtenerIconoEstadoEvento(evento.estadoEvento) }}</mat-icon>
+              {{ evento.estadoEvento | titlecase }}
+            </mat-chip>
+          </td>
+          <td>
+            <mat-chip *ngIf="evento.categoria">
+              <mat-icon matChipAvatar>category</mat-icon>
+              {{ evento.categoria }}
+            </mat-chip>
+            <span *ngIf="!evento.categoria" class="sin-dato">-</span>
+          </td>
+          <td>
+            <mat-chip [style.background]="obtenerInfoTipoEvento(evento.tipoEvento).color"
+                      [style.color]="'white'">
+              {{ obtenerInfoTipoEvento(evento.tipoEvento).icono }}
+              {{ obtenerInfoTipoEvento(evento.tipoEvento).texto }}
+            </mat-chip>
+          </td>
+          <td>
+              <span *ngIf="evento.capacidadMaxima" class="capacidad-valor">
+                {{ evento.capacidadMaxima }} personas
+              </span>
+            <span *ngIf="!evento.capacidadMaxima" class="sin-limite">Sin límite</span>
+          </td>
+          <td>
+            <mat-chip color="primary" highlighted>
+              {{ evento.puntos }} pts
+            </mat-chip>
+          </td>
+          <td>
+            <div class="acciones">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="abrirModalEditar(evento)"
+                matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="verParticipantes(evento)"
+                matTooltip="Ver participantes">
+                <mat-icon>people</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="eliminarEvento(evento)"
+                matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="acciones-rapidas">
+              <button
+                mat-icon-button
+                (click)="cambiarEstadoRapido(evento, evento.estadoEvento === 'programado' ? 'en curso' : evento.estadoEvento === 'en curso' ? 'finalizado' : 'programado')"
+                matTooltip="Cambiar estado">
+                <mat-icon>sync</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="actualizarCapacidadRapida(evento)"
+                matTooltip="Actualizar capacidad">
+                <mat-icon>groups</mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="eventos.length === 0" class="sin-eventos">
+        <mat-icon class="icon-vacio">event</mat-icon>
+        <p>No hay eventos {{ filtroCategoria || filtroEstado ? 'que coincidan con los filtros' : 'creados todavía' }}.</p>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="limpiarFiltros()"
+          *ngIf="filtroCategoria || filtroEstado">
+          Limpiar filtros
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="abrirModalCrear()"
+          *ngIf="!filtroCategoria && !filtroEstado">
+          Crear mi primer evento
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Modal Crear/Editar -->
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ modoEdicion ? 'edit' : 'add_circle' }}</mat-icon>
+        {{ modoEdicion ? 'Editar Evento' : 'Crear Nuevo Evento' }}
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModal()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (submit)="guardarEvento(); $event.preventDefault()">
+        <!-- Información básica -->
+        <h3 class="seccion-titulo">
+          <mat-icon>description</mat-icon>
+          Información Básica
+        </h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre del Evento</mat-label>
+          <input
+            matInput
+            [(ngModel)]="nombre"
+            name="nombre"
+            placeholder="Ej: Reciclathón Vecinal"
+            [disabled]="guardando"
+            required>
+          <mat-icon matPrefix>label</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="descripcion"
+            name="descripcion"
+            rows="4"
+            placeholder="Describe el evento..."
+            [disabled]="guardando"
+            required></textarea>
+          <mat-icon matPrefix>notes</mat-icon>
+        </mat-form-field>
+
+        <!-- Fecha y Hora -->
+        <h3 class="seccion-titulo">
+          <mat-icon>schedule</mat-icon>
+          Fecha y Horario
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha del Evento</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [formControl]="fechaControl"
+              [disabled]="guardando"
+              required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Puntos</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="puntos"
+              name="puntos"
+              min="0"
+              placeholder="Ej: 50"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>stars</mat-icon>
+            <mat-hint>Puntos base por asistencia</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio</mat-label>
+            <input
+              matInput
+              type="time"
+              [(ngModel)]="horaInicio"
+              name="horaInicio"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>schedule</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Fin</mat-label>
+            <input
+              matInput
+              type="time"
+              [(ngModel)]="horaFin"
+              name="horaFin"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>schedule</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Ubicación -->
+        <mat-form-field appearance="outline">
+          <mat-label>Lugar</mat-label>
+          <input
+            matInput
+            [(ngModel)]="lugar"
+            name="lugar"
+            placeholder="Ej: Parque Kennedy, Miraflores"
+            [disabled]="guardando"
+            required>
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+
+        <!-- Capacidad y Estado -->
+        <h3 class="seccion-titulo">
+          <mat-icon>settings</mat-icon>
+          Capacidad y Estado
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Capacidad Máxima</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="capacidadMaxima"
+              name="capacidadMaxima"
+              min="0"
+              placeholder="Ej: 100"
+              [disabled]="guardando">
+            <mat-icon matPrefix>people</mat-icon>
+            <mat-hint>Opcional - límite de participantes</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Estado del Evento</mat-label>
+            <mat-select
+              [(ngModel)]="estadoEvento"
+              name="estadoEvento"
+              [disabled]="guardando"
+              required>
+              <mat-option value="programado">
+                <mat-icon>event</mat-icon> Programado
+              </mat-option>
+              <mat-option value="en curso">
+                <mat-icon>play_circle</mat-icon> En Curso
+              </mat-option>
+              <mat-option value="finalizado">
+                <mat-icon>check_circle</mat-icon> Finalizado
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>settings</mat-icon>
+            <mat-hint>Estado actual del evento</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Tipo de Acceso -->
+        <h3 class="seccion-titulo">
+          <mat-icon>lock</mat-icon>
+          Control de Acceso
+        </h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de Evento</mat-label>
+          <mat-select
+            [(ngModel)]="tipoEvento"
+            name="tipoEvento"
+            [disabled]="guardando"
+            required>
+            <mat-option value="publico">🌍 Público - Todos pueden acceder</mat-option>
+            <mat-option value="premium">⭐ Premium - Requiere plan Premium o VIP</mat-option>
+            <mat-option value="vip">👑 VIP - Solo usuarios VIP</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>lock_open</mat-icon>
+          <mat-hint>Define quién puede inscribirse en este evento</mat-hint>
+        </mat-form-field>
+
+        <!-- Info sobre tipos de evento -->
+        <mat-card class="info-card">
+          <mat-card-content>
+            <h4><mat-icon>info</mat-icon> Información sobre tipos de evento:</h4>
+            <ul>
+              <li><strong>🌍 Público:</strong> Todos los usuarios pueden inscribirse</li>
+              <li><strong>⭐ Premium:</strong> Solo usuarios con plan Premium o VIP</li>
+              <li><strong>👑 VIP:</strong> Exclusivo para usuarios con plan VIP</li>
+            </ul>
+            <p class="nota-multiplicadores">
+              <mat-icon>star</mat-icon>
+              <strong>Nota:</strong> Los puntos se otorgan con multiplicador según el plan:
+              Básico (×1), Premium (×2), VIP (×3)
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Categoría e Imagen -->
+        <h3 class="seccion-titulo">
+          <mat-icon>category</mat-icon>
+          Clasificación e Imagen
+        </h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <mat-select
+            [(ngModel)]="categoria"
+            name="categoria"
+            [disabled]="guardando">
+            <mat-option value="">Seleccione una categoría</mat-option>
+            <mat-option *ngFor="let cat of categoriasDisponibles" [value]="cat">
+              {{ cat }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+          <mat-hint>Opcional - agrupa eventos similares</mat-hint>
+        </mat-form-field>
+
+        <!-- Selector de Banner -->
+        <div class="upload-container">
+          <input
+            type="file"
+            id="imagenBannerInput"
+            accept="image/*"
+            (change)="onArchivoSeleccionado($event)"
+            style="display: none">
+
+          <button
+            type="button"
+            mat-raised-button
+            color="accent"
+            (click)="abrirSelectorArchivos()"
+            [disabled]="guardando || subiendoImagen">
+            <mat-icon>cloud_upload</mat-icon>
+            {{ imagenPreview ? 'Cambiar Banner' : 'Subir Banner' }}
+          </button>
+
+          <p class="upload-hint">
+            <mat-icon>info</mat-icon>
+            Formatos: JPG, PNG, GIF. Máximo 5MB
+          </p>
+        </div>
+
+        <!-- Preview de imagen -->
+        <div class="imagen-preview" *ngIf="imagenPreview">
+          <div class="preview-header">
+            <p class="preview-label">Vista previa:</p>
+            <button
+              type="button"
+              mat-icon-button
+              color="warn"
+              (click)="eliminarImagen()"
+              [disabled]="guardando"
+              matTooltip="Eliminar imagen">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <img [src]="imagenPreview" alt="Preview" />
+          <p class="archivo-info" *ngIf="archivoSeleccionado">
+            <mat-icon>insert_drive_file</mat-icon>
+            {{ archivoSeleccionado.name }} ({{ (archivoSeleccionado.size / 1024 / 1024).toFixed(2) }} MB)
+          </p>
+        </div>
+
+        <!-- Indicador de carga -->
+        <div class="subiendo-imagen" *ngIf="subiendoImagen">
+          <mat-spinner diameter="30"></mat-spinner>
+          <span>Procesando imagen...</span>
+        </div>
+
+        <!-- Error del formulario -->
+        <mat-error *ngIf="errorFormulario" class="form-error">
+          <mat-icon>error</mat-icon>
+          {{ errorFormulario }}
+        </mat-error>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        (click)="cerrarModal()"
+        [disabled]="guardando">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="guardarEvento()"
+        [disabled]="guardando">
+        <mat-icon>{{ guardando ? 'hourglass_empty' : 'save' }}</mat-icon>
+        {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Crear Evento') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- Modal de Participantes -->
+<div class="modal-overlay" *ngIf="modalParticipantes" (click)="cerrarModalParticipantes()">
+  <mat-card class="modal-content modal-grande" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>people</mat-icon>
+        Participantes: {{ eventoSeleccionado?.nombre }}
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModalParticipantes()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Resumen del evento -->
+      <mat-card class="evento-resumen">
+        <mat-card-content>
+          <div class="resumen-grid">
+            <div class="resumen-item">
+              <mat-icon>calendar_today</mat-icon>
+              <div>
+                <strong>Fecha</strong>
+                <p>{{ formatearFecha(eventoSeleccionado!.fecha) }}</p>
+              </div>
+            </div>
+            <div class="resumen-item">
+              <mat-icon>location_on</mat-icon>
+              <div>
+                <strong>Lugar</strong>
+                <p>{{ eventoSeleccionado?.lugar }}</p>
+              </div>
+            </div>
+            <div class="resumen-item">
+              <mat-icon>settings</mat-icon>
+              <div>
+                <strong>Estado</strong>
+                <mat-chip [color]="obtenerColorEstadoEvento(eventoSeleccionado!.estadoEvento)" highlighted>
+                  {{ eventoSeleccionado?.estadoEvento | titlecase }}
+                </mat-chip>
+              </div>
+            </div>
+            <div class="resumen-item">
+              <mat-icon>stars</mat-icon>
+              <div>
+                <strong>Puntos</strong>
+                <p>{{ eventoSeleccionado?.puntos }} pts</p>
+              </div>
+            </div>
+            <div class="resumen-item" *ngIf="eventoSeleccionado?.capacidadMaxima">
+              <mat-icon>people</mat-icon>
+              <div>
+                <strong>Capacidad</strong>
+                <p>{{ eventoSeleccionado?.capacidadMaxima }} personas</p>
+              </div>
+            </div>
+            <div class="resumen-item">
+              <mat-icon>groups</mat-icon>
+              <div>
+                <strong>Total inscritos</strong>
+                <p>{{ participantesEvento.length }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Loading -->
+      <div *ngIf="cargandoParticipantes" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Cargando participantes...</p>
+      </div>
+
+      <!-- Tabla de participantes -->
+      <div *ngIf="!cargandoParticipantes" class="participantes-container">
+        <mat-card *ngFor="let participante of participantesEvento" class="participante-card">
+          <mat-card-content>
+            <div class="participante-info">
+              <div class="participante-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div class="participante-datos">
+                <div *ngIf="participante.usuario">
+                  <strong>{{ participante.usuario.nombre }}</strong>
+                  <p>{{ participante.usuario.email }}</p>
+                </div>
+                <div *ngIf="!participante.usuario">
+                  <strong>Usuario #{{ participante.idusuario }}</strong>
+                </div>
+                <mat-chip-set>
+                  <mat-chip>
+                    <mat-icon matChipAvatar>calendar_today</mat-icon>
+                    Inscrito: {{ formatearFecha(participante.fechainscripcion) }}
+                  </mat-chip>
+                  <mat-chip [color]="obtenerColorEstadoAsistencia(participante)" highlighted>
+                    {{ obtenerEstadoAsistencia(participante) }}
+                  </mat-chip>
+                  <mat-chip *ngIf="participante.asistio" color="primary" highlighted>
+                    <mat-icon matChipAvatar>stars</mat-icon>
+                    {{ participante.puntosotorgados }} pts
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              [color]="participante.asistio ? 'primary' : ''"
+              (click)="marcarAsistencia(participante, true)"
+              matTooltip="Marcar como asistió">
+              <mat-icon>check_circle</mat-icon>
+              Asistió
+            </button>
+            <button
+              mat-stroked-button
+              [color]="!participante.asistio && participante.puntosotorgados === 0 ? 'warn' : ''"
+              (click)="marcarAsistencia(participante, false)"
+              matTooltip="Marcar como NO asistió">
+              <mat-icon>cancel</mat-icon>
+              No asistió
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <div *ngIf="participantesEvento.length === 0" class="sin-participantes">
+          <mat-icon class="icon-vacio">people_outline</mat-icon>
+          <p>No hay participantes inscritos en este evento</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

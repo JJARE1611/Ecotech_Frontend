@@ -1,0 +1,433 @@
+<!-- Hero Section -->
+<section class="deposito-hero">
+  <h1>Sistema de Depósitos</h1>
+</section>
+
+<!-- Contenido Principal -->
+<section class="deposito-contenido">
+
+  <!-- Tipos de Depósito -->
+  <div class="seccion-tipos">
+    <mat-card class="info-card">
+      <div class="tipos-grid">
+        <div class="tipo-imagen">
+          <img src="https://thumbs.dreamstime.com/b/deseche-la-botella-de-pl%C3%A1stico-en-el-dep%C3%B3sito-un-hombre-arroja-basura-cubo-por-separado-para-deshacerse-ella-como-peligroso-266783039.jpg" alt="Depósito de reciclaje">
+        </div>
+        <div class="tipo-info">
+          <h2>Conoce los tipos de depósito</h2>
+          <p>El reciclaje se clasifica en varios tipos según el material: reciclaje de papel y cartón, que convierte papel usado en nuevos productos; reciclaje de vidrio, que reutiliza botellas y frascos; reciclaje de plásticos, que incluye la transformación de envases en nuevos artículos; reciclaje de metales, como el aluminio y el acero; y reciclaje de residuos orgánicos, que genera compost a partir de restos de alimentos.</p>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Guía de Reciclaje -->
+  <div class="seccion-guia">
+    <mat-card class="guia-card">
+      <div class="guia-grid">
+        <div class="guia-texto">
+          <h2>¿Deseas saber cómo se recicla adecuadamente?</h2>
+          <p>Nosotros como organización te brindamos una guía especializada de reciclaje donde podrás poner en práctica un reciclaje adecuado y consciente en tu entorno.</p>
+          <p class="highlight">
+            <mat-icon>info</mat-icon>
+            Recuerda que reciclar correctamente en nuestros puntos de reciclaje te ayudará a generar más Eco-puntos!
+          </p>
+        </div>
+        <div class="guia-imagen">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.4Kd4KWDFfDzqnij_iEis4QHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Reciclaje correcto">
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Mapa de Calor -->
+  <div class="seccion-mapa">
+    <h2>Mapa de calor</h2>
+    <mat-card class="mapa-card">
+      <div class="mapa-container">
+        <div class="mapa-iframe">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62425.38659972131!2d-77.0428!3d-12.0464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c5f619ee3ec7%3A0x14206cb9cc452e4a!2sLima%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1234567890"
+            width="100%"
+            height="400"
+            style="border:0; border-radius: 15px;"
+            allowfullscreen=""
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="mapa-detalles">
+          <h3>
+            <mat-icon>info</mat-icon>
+            Detalles
+          </h3>
+          <p class="mapa-titulo">Tipos de residuos: Plásticos</p>
+          <ul class="mapa-lista">
+            <li><mat-icon>check_circle</mat-icon> Reciclar: Botellas de agua, envases de productos de limpieza, bolsas plásticas (llevar a puntos de reciclaje específicos).</li>
+            <li><mat-icon>cancel</mat-icon> No reciclar: Plásticos contaminados con restos de comida o sustancias peligrosas.</li>
+          </ul>
+          <div class="mapa-consejo">
+            <mat-icon>lightbulb</mat-icon>
+            <p>Consejo: Optar por reutilizar bolsas de tela y comprar productos con envases reutilizables o reciclables.</p>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Puntos de Reciclaje -->
+  <div class="seccion-puntos">
+    <h2>Visita nuestros puntos de reciclaje</h2>
+    <mat-card class="puntos-card">
+      <div class="puntos-mapa">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62425.38659972131!2d-77.0428!3d-12.0464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c5f619ee3ec7%3A0x14206cb9cc452e4a!2sLima%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1234567890"
+          width="100%"
+          height="450"
+          style="border:0; border-radius: 15px;"
+          allowfullscreen=""
+          loading="lazy">
+        </iframe>
+        <mat-card class="punto-destacado">
+          <mat-card-content>
+            <h4>
+              <mat-icon>place</mat-icon>
+              Recicla Latam
+            </h4>
+            <p>Av. José Pardo 223, Miraflores 15074</p>
+            <a href="https://maps.google.com" target="_blank" mat-raised-button color="primary">
+              <mat-icon>directions</mat-icon>
+              Cómo llegar
+            </a>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Sistema de Puntaje -->
+  <div class="seccion-puntaje">
+    <h2>Sistema de Puntaje</h2>
+    <mat-card class="puntaje-card">
+      <table mat-table [dataSource]="tiposResiduos" class="mat-elevation-z0">
+
+        <!-- Columna Tipo -->
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo de Residuo</th>
+          <td mat-cell *matCellDef="let tipo">
+            <div class="tipo-residuo-cell">
+              <mat-icon>{{ tipo.icono }}</mat-icon>
+              <span>{{ tipo.nombre }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Columna Ejemplos -->
+        <ng-container matColumnDef="ejemplos">
+          <th mat-header-cell *matHeaderCellDef>Ejemplos</th>
+          <td mat-cell *matCellDef="let tipo">{{ tipo.ejemplos }}</td>
+        </ng-container>
+
+        <!-- Columna Puntos -->
+        <ng-container matColumnDef="puntos">
+          <th mat-header-cell *matHeaderCellDef>Puntos por KG</th>
+          <td mat-cell *matCellDef="let tipo">
+            <mat-chip color="primary" highlighted>
+              <mat-icon matChipAvatar>stars</mat-icon>
+              {{ tipo.puntosPorKg }} pts/KG
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card>
+  </div>
+
+  <!-- Reportar Área Contaminada -->
+  <div class="seccion-reportar" *ngIf="usuarioActual">
+    <h2>
+      <mat-icon>{{ editando ? 'edit' : 'report' }}</mat-icon>
+      {{ editando ? 'Editar Reporte' : 'Reportar Área Contaminada' }}
+    </h2>
+
+    <mat-card class="form-card">
+      <mat-card-content>
+        <form (submit)="enviarReporte(); $event.preventDefault()">
+
+          <!-- Ubicación -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ubicación</mat-label>
+            <input matInput [(ngModel)]="formulario.ubicacion" name="ubicacion" placeholder="Ingrese su ubicación" [disabled]="enviando" required>
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+          <!-- Fecha -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha de envío</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="fechaControl" [disabled]="enviando" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <!-- Descripción -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="3" [(ngModel)]="formulario.descripcion" name="descripcion" placeholder="Ingrese una descripción corta" [disabled]="enviando" required></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+          </mat-form-field>
+
+          <!-- Tipo de residuo -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tipo de residuo</mat-label>
+            <mat-select [(ngModel)]="formulario.tiporesiduo" name="tiporesiduo" [disabled]="enviando" required>
+              <mat-option value="">Seleccione un tipo</mat-option>
+              <mat-option *ngFor="let tipo of tiposResiduos" [value]="tipo.id">
+                <mat-icon>{{ tipo.icono }}</mat-icon>
+                {{ tipo.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+
+          <!-- Ubicación del depósito -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ubicación del depósito de reciclaje</mat-label>
+            <input matInput [(ngModel)]="formulario.ubicaciondeposito" name="ubicaciondeposito" placeholder="Ingrese la ubicación del depósito" [disabled]="enviando" required>
+            <mat-icon matPrefix>store</mat-icon>
+          </mat-form-field>
+
+          <!-- Sección de Pruebas Mejorada -->
+          <div class="pruebas-section">
+            <mat-label class="pruebas-label">
+              <mat-icon>image</mat-icon>
+              Subir pruebas (Imágenes)
+            </mat-label>
+
+            <button
+              mat-raised-button
+              type="button"
+              (click)="fileInput.click()"
+              [disabled]="enviando"
+              class="btn-subir-imagen">
+              <mat-icon>upload_file</mat-icon>
+              Seleccionar imágenes
+            </button>
+
+            <input
+              #fileInput
+              type="file"
+              (change)="onFileChange($event)"
+              accept="image/*"
+              [disabled]="enviando"
+              multiple
+              style="display: none;">
+
+            <!-- Vista previa de imágenes -->
+            <div class="imagenes-preview" *ngIf="previewsImagenes.length > 0">
+              <div class="preview-item" *ngFor="let preview of previewsImagenes; let i = index">
+                <img [src]="preview" alt="Preview {{ i + 1 }}">
+                <button
+                  mat-icon-button
+                  class="btn-eliminar-preview"
+                  (click)="eliminarImagen(i)"
+                  [disabled]="enviando"
+                  type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <mat-hint *ngIf="imagenesSeleccionadas.length > 0" class="archivos-info">
+              <mat-icon>check_circle</mat-icon>
+              {{ imagenesSeleccionadas.length }} imagen(es) seleccionada(s)
+            </mat-hint>
+          </div>
+
+          <!-- Cantidad -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Cantidad Reciclada (KG)</mat-label>
+            <input matInput type="number" [(ngModel)]="formulario.cantidad" name="cantidad" placeholder="KG" min="0.1" step="0.1" [disabled]="enviando" required>
+            <mat-icon matPrefix>scale</mat-icon>
+            <mat-hint *ngIf="formulario.cantidad > 0 && formulario.tiporesiduo" class="puntos-estimados">
+              <mat-icon>auto_awesome</mat-icon>
+              ≈ {{ calcularPuntosEstimados() }} puntos estimados
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-divider></mat-divider>
+
+          <div class="form-acciones">
+            <button mat-raised-button color="primary" type="submit" [disabled]="enviando" class="btn-enviar">
+              <mat-icon>{{ enviando ? 'hourglass_empty' : 'send' }}</mat-icon>
+              {{ enviando ? 'Enviando...' : (editando ? 'Actualizar Reporte' : 'Enviar Reporte') }}
+            </button>
+
+            <button *ngIf="editando" mat-stroked-button type="button" (click)="cancelarEdicion()" [disabled]="enviando">
+              <mat-icon>close</mat-icon>
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Mensaje para usuarios no logueados -->
+  <div class="seccion-reportar" *ngIf="!usuarioActual">
+    <h2>
+      <mat-icon>report</mat-icon>
+      Reportar Área Contaminada
+    </h2>
+    <mat-card class="mensaje-login-card">
+      <mat-card-content>
+        <mat-icon>warning</mat-icon>
+        <p>Debes iniciar sesión para reportar áreas contaminadas</p>
+        <a routerLink="/login" mat-raised-button color="primary">
+          <mat-icon>login</mat-icon>
+          Iniciar Sesión
+        </a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Historial de Reportes -->
+  <div class="seccion-historial" *ngIf="usuarioActual">
+    <h2>
+      <mat-icon>history</mat-icon>
+      Historial de Reportes
+    </h2>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="historial-loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando reportes...</p>
+    </div>
+
+    <!-- Sin reportes -->
+    <div *ngIf="!cargando && misDepositos.length === 0" class="sin-reportes">
+      <mat-icon class="sin-reportes-icono">inventory_2</mat-icon>
+      <h3>No tienes reportes</h3>
+      <p>Comienza reportando tu primera área contaminada</p>
+    </div>
+
+    <!-- Carrusel de reportes -->
+    <div *ngIf="!cargando && misDepositos.length > 0" class="historial-cards">
+      <button mat-icon-button (click)="anteriorDeposito()" [disabled]="indiceActual === 0" class="btn-navegacion">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <mat-card class="reporte-card" *ngIf="depositoActual">
+        <mat-card-header>
+          <mat-card-title>
+            <span>Reporte N° {{ depositoActual.id }}</span>
+            <mat-chip>{{ indiceActual + 1 }} / {{ misDepositos.length }}</mat-chip>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="reporte-detalle">
+            <mat-icon>location_on</mat-icon>
+            <div>
+              <strong>Ubicación:</strong>
+              <span>{{ depositoActual.ubicacion }}</span>
+            </div>
+          </div>
+
+          <div class="reporte-detalle">
+            <mat-icon>event</mat-icon>
+            <div>
+              <strong>Fecha de envío:</strong>
+              <span>{{ formatearFecha(depositoActual.fechaenvio) }}</span>
+            </div>
+          </div>
+
+          <div class="reporte-detalle">
+            <mat-icon>description</mat-icon>
+            <div>
+              <strong>Descripción:</strong>
+              <span>{{ depositoActual.descripcion }}</span>
+            </div>
+          </div>
+
+          <div class="reporte-detalle">
+            <mat-icon>{{ obtenerIconoResiduo(depositoActual.tiporesiduo) }}</mat-icon>
+            <div>
+              <strong>Tipo de residuo:</strong>
+              <span>{{ obtenerNombreResiduo(depositoActual.tiporesiduo) }}</span>
+            </div>
+          </div>
+
+          <div class="reporte-detalle">
+            <mat-icon>store</mat-icon>
+            <div>
+              <strong>Ubicación del depósito:</strong>
+              <span>{{ depositoActual.ubicaciondeposito }}</span>
+            </div>
+          </div>
+
+          <div class="reporte-detalle">
+            <mat-icon>scale</mat-icon>
+            <div>
+              <strong>Cantidad:</strong>
+              <span>{{ depositoActual.cantidad }} KG</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="reporte-estado">
+            <strong>Estado:</strong>
+            <mat-chip [color]="obtenerColorEstado(depositoActual.estado)" highlighted>
+              {{ depositoActual.estado }}
+            </mat-chip>
+          </div>
+
+          <div *ngIf="depositoActual.estado === 'Aprobado'" class="reporte-puntos">
+            <mat-icon>stars</mat-icon>
+            <strong>Puntos otorgados:</strong>
+            <span class="puntos-valor">{{ depositoActual.puntosotorgados }} puntos</span>
+          </div>
+
+          <!-- Imágenes del depósito -->
+          <div class="reporte-imagenes" *ngIf="depositoActual.pruebas && obtenerImagenesDeposito(depositoActual.pruebas).length > 0">
+            <mat-icon>image</mat-icon>
+            <div>
+              <strong>Pruebas fotográficas ({{ obtenerImagenesDeposito(depositoActual.pruebas).length }})</strong>
+              <div class="imagenes-grid">
+                <img
+                  *ngFor="let imagen of obtenerImagenesDeposito(depositoActual.pruebas)"
+                  [src]="imagen"
+                  alt="Prueba"
+                  class="imagen-prueba"
+                  (click)="verImagenCompleta(imagen)">
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button [color]="depositoActual.estado === 'Pendiente' ? 'primary' : ''" (click)="editarReporte(depositoActual)" [disabled]="depositoActual.estado !== 'Pendiente'" class="btn-full">
+            <mat-icon>{{ depositoActual.estado === 'Pendiente' ? 'edit' : 'lock' }}</mat-icon>
+            {{ depositoActual.estado === 'Pendiente' ? 'Editar Reporte' : 'No editable' }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <button mat-icon-button (click)="siguienteDeposito()" [disabled]="indiceActual === misDepositos.length - 1" class="btn-navegacion">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+</section>
+
+<!-- Modal de Imagen Completa -->
+<div class="modal-overlay modal-imagen-overlay" *ngIf="modalImagen" (click)="cerrarModalImagen()">
+  <div class="modal-imagen-content" (click)="$event.stopPropagation()">
+    <button mat-icon-button (click)="cerrarModalImagen()" class="btn-cerrar-imagen">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img [src]="imagenSeleccionada" alt="Imagen completa">
+  </div>
+</div>

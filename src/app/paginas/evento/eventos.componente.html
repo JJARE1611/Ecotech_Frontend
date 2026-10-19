@@ -1,0 +1,338 @@
+<div class="eventos-container">
+
+  <div *ngIf="cargando" class="loading-overlay">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando eventos...</p>
+  </div>
+
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarEventos()">
+        <mat-icon>refresh</mat-icon>
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="!cargando && !error">
+    <section class="eventos-hero">
+      <div class="hero-overlay">
+        <h1>UNIDOS POR UN<br>FUTURO VERDE</h1>
+        <p>Regístrate a estos eventos</p>
+      </div>
+    </section>
+
+
+    <div *ngIf="usuarioActual" class="mis-eventos-banner">
+      <button mat-raised-button class="btn-mis-eventos" (click)="verMisEventos()">
+        <mat-icon>event_note</mat-icon>
+        Ver mis eventos inscritos
+      </button>
+    </div>
+
+
+    <div *ngIf="usuarioActual" class="plan-beneficios-banner">
+      <div class="plan-info" [style.background]="obtenerColorPlan()">
+        <span class="plan-icono">{{ obtenerIconoPlan() }}</span>
+        <div class="plan-detalles">
+          <span class="plan-nombre">Plan {{ planUsuario }}</span>
+          <span class="plan-multiplicador">×{{ multiplicadorPuntos }} puntos en eventos</span>
+        </div>
+      </div>
+      <div class="plan-beneficios-lista">
+        <mat-chip *ngIf="planUsuario === 'Premium' || planUsuario === 'VIP'" class="beneficio-chip">
+          <mat-icon matChipAvatar>star</mat-icon>
+          Acceso a eventos Premium
+        </mat-chip>
+        <mat-chip *ngIf="planUsuario === 'VIP'" class="beneficio-chip">
+          <mat-icon matChipAvatar>workspace_premium</mat-icon>
+          Acceso a eventos exclusivos VIP
+        </mat-chip>
+        <mat-chip *ngIf="descuentoCanjes > 0" class="beneficio-chip">
+          <mat-icon matChipAvatar>local_offer</mat-icon>
+          {{ descuentoCanjes }}% descuento en canjes
+        </mat-chip>
+      </div>
+    </div>
+
+    <section class="eventos-seccion" *ngIf="eventosProximos.length > 0">
+      <h2 class="seccion-titulo">
+        <mat-icon class="seccion-icon">event_available</mat-icon>
+        Próximos Eventos
+        <mat-chip class="seccion-badge" color="primary" highlighted>
+          Puedes inscribirte
+        </mat-chip>
+      </h2>
+
+      <mat-card *ngFor="let evento of eventosProximos" class="evento-card">
+        <div class="evento-imagen">
+          <img
+            [src]="obtenerImagenEvento(evento)"
+            [alt]="evento.nombre"
+            onerror="this.src='https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800'">
+
+          <mat-chip
+            *ngIf="evento.categoria"
+            class="evento-categoria-badge"
+            [style.background]="obtenerColorCategoria(evento.categoria)">
+            {{ evento.categoria }}
+          </mat-chip>
+
+          <mat-chip class="evento-estado-badge estado-programado" color="primary" highlighted>
+            <mat-icon matChipAvatar>schedule</mat-icon>
+            Programado
+          </mat-chip>
+
+          <mat-chip
+            class="evento-tipo-badge-img"
+            [ngClass]="{
+              'tipo-publico': !evento.tipoEvento || evento.tipoEvento === 'publico',
+              'tipo-premium': evento.tipoEvento === 'premium',
+              'tipo-vip': evento.tipoEvento === 'vip'
+            }">
+            <mat-icon matChipAvatar *ngIf="!evento.tipoEvento || evento.tipoEvento === 'publico'">public</mat-icon>
+            <mat-icon matChipAvatar *ngIf="evento.tipoEvento === 'premium'">star</mat-icon>
+            <mat-icon matChipAvatar *ngIf="evento.tipoEvento === 'vip'">workspace_premium</mat-icon>
+            <span *ngIf="!evento.tipoEvento || evento.tipoEvento === 'publico'">Público</span>
+            <span *ngIf="evento.tipoEvento === 'premium'">Premium</span>
+            <span *ngIf="evento.tipoEvento === 'vip'">VIP</span>
+          </mat-chip>
+        </div>
+
+        <mat-card-content class="evento-info">
+          <div>
+            <h3>{{ evento.nombre }}</h3>
+            <p class="evento-descripcion">{{ evento.descripcion }}</p>
+
+            <div class="evento-detalles">
+              <div class="detalle-item">
+                <mat-icon>location_on</mat-icon>
+                <span class="label">Lugar</span>
+                <span class="valor">{{ evento.lugar }}</span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="label">Fecha</span>
+                <span class="valor">{{ formatearFecha(evento.fecha) }}</span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>access_time</mat-icon>
+                <span class="label">Hora</span>
+                <span class="valor" *ngIf="evento.horaInicio && evento.horaFin">
+                  {{ evento.horaInicio }} - {{ evento.horaFin }}
+                </span>
+                <span class="valor" *ngIf="!evento.horaInicio || !evento.horaFin">
+                  Por confirmar
+                </span>
+              </div>
+              <div class="detalle-item" *ngIf="evento.capacidadMaxima">
+                <mat-icon>people</mat-icon>
+                <span class="label">Capacidad</span>
+                <span class="valor">{{ evento.capacidadMaxima }} personas</span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>card_giftcard</mat-icon>
+                <span class="label">Puntos</span>
+                <span class="valor puntos-valor">
+                  <span *ngIf="multiplicadorPuntos > 1" class="puntos-original">
+                    {{ evento.puntos }}
+                  </span>
+                  <span class="puntos-final">
+                    {{ calcularPuntosConMultiplicador(evento.puntos) }} pts
+                  </span>
+                  <mat-chip *ngIf="multiplicadorPuntos > 1" class="multiplicador-badge">
+                    ×{{ multiplicadorPuntos }}
+                  </mat-chip>
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-unirme"
+            (click)="inscribirseEvento(evento)"
+            [disabled]="!puedeAccederEvento(evento.tipoEvento)">
+            <mat-icon *ngIf="puedeAccederEvento(evento.tipoEvento)">how_to_reg</mat-icon>
+            <mat-icon *ngIf="!puedeAccederEvento(evento.tipoEvento)">lock</mat-icon>
+            <span *ngIf="puedeAccederEvento(evento.tipoEvento)">
+              Unirme al Evento
+            </span>
+            <span *ngIf="!puedeAccederEvento(evento.tipoEvento)">
+              {{ obtenerMensajeRestriccion(evento.tipoEvento) }}
+            </span>
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <section class="eventos-seccion eventos-en-curso" *ngIf="eventosEnCurso.length > 0">
+      <h2 class="seccion-titulo">
+        <mat-icon class="seccion-icon">play_arrow</mat-icon>
+        Eventos Transcurriendo Ahora
+        <mat-chip class="seccion-badge badge-encurso" color="accent" highlighted>
+          En vivo
+        </mat-chip>
+      </h2>
+
+      <mat-card *ngFor="let evento of eventosEnCurso" class="evento-card evento-en-curso">
+        <div class="evento-imagen">
+          <img
+            [src]="obtenerImagenEvento(evento)"
+            [alt]="evento.nombre"
+            onerror="this.src='https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800'">
+
+          <mat-chip
+            *ngIf="evento.categoria"
+            class="evento-categoria-badge"
+            [style.background]="obtenerColorCategoria(evento.categoria)">
+            {{ evento.categoria }}
+          </mat-chip>
+
+          <mat-chip class="evento-estado-badge estado-encurso" color="accent" highlighted>
+            <mat-icon matChipAvatar>play_circle</mat-icon>
+            En Curso
+          </mat-chip>
+
+          <mat-chip
+            class="evento-tipo-badge-img"
+            [ngClass]="{
+              'tipo-publico': !evento.tipoEvento || evento.tipoEvento === 'publico',
+              'tipo-premium': evento.tipoEvento === 'premium',
+              'tipo-vip': evento.tipoEvento === 'vip'
+            }">
+            <mat-icon matChipAvatar *ngIf="!evento.tipoEvento || evento.tipoEvento === 'publico'">public</mat-icon>
+            <mat-icon matChipAvatar *ngIf="evento.tipoEvento === 'premium'">star</mat-icon>
+            <mat-icon matChipAvatar *ngIf="evento.tipoEvento === 'vip'">workspace_premium</mat-icon>
+            <span *ngIf="!evento.tipoEvento || evento.tipoEvento === 'publico'">Público</span>
+            <span *ngIf="evento.tipoEvento === 'premium'">Premium</span>
+            <span *ngIf="evento.tipoEvento === 'vip'">VIP</span>
+          </mat-chip>
+        </div>
+
+        <mat-card-content class="evento-info">
+          <div>
+            <h3>{{ evento.nombre }}</h3>
+            <p class="evento-descripcion">{{ evento.descripcion }}</p>
+
+            <div class="evento-detalles">
+              <div class="detalle-item">
+                <mat-icon>location_on</mat-icon>
+                <span class="label">Lugar</span>
+                <span class="valor">{{ evento.lugar }}</span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="label">Fecha</span>
+                <span class="valor">{{ formatearFecha(evento.fecha) }}</span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>access_time</mat-icon>
+                <span class="label">Hora</span>
+                <span class="valor" *ngIf="evento.horaInicio && evento.horaFin">
+                  {{ evento.horaInicio }} - {{ evento.horaFin }}
+                </span>
+              </div>
+              <div class="detalle-item">
+                <mat-icon>card_giftcard</mat-icon>
+                <span class="label">Puntos</span>
+                <span class="valor puntos-valor">
+                  {{ calcularPuntosConMultiplicador(evento.puntos) }} pts
+                </span>
+              </div>
+            </div>
+
+            <mat-card class="alerta-encurso">
+              <mat-card-content>
+                <mat-icon>warning</mat-icon>
+                Este evento ya comenzó. No es posible inscribirse.
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <section class="eventos-seccion" *ngIf="eventosProximos.length === 0 && eventosEnCurso.length === 0">
+      <mat-card class="sin-eventos">
+        <mat-card-content>
+          <mat-icon class="sin-eventos-icon">eco</mat-icon>
+          <p>No hay eventos programados en este momento.</p>
+          <p>Vuelve pronto para ver nuevos eventos. 🌿</p>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <section class="eventos-pasados" *ngIf="eventosPasados.length > 0">
+      <h2 class="seccion-titulo">
+        <mat-icon class="seccion-icon">check_circle</mat-icon>
+        Eventos Finalizados
+        <mat-chip class="seccion-badge badge-finalizados" highlighted>
+          Completados
+        </mat-chip>
+      </h2>
+
+      <div class="galeria-eventos">
+        <mat-card *ngFor="let evento of eventosPasados" class="evento-pasado">
+          <div class="evento-pasado-imagen">
+            <img
+              [src]="obtenerImagenEvento(evento)"
+              [alt]="evento.nombre"
+              onerror="this.src='https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800'">
+
+            <mat-chip
+              *ngIf="evento.categoria"
+              class="evento-pasado-categoria"
+              [style.background]="obtenerColorCategoria(evento.categoria)">
+              {{ evento.categoria }}
+            </mat-chip>
+
+            <mat-chip class="evento-estado-badge estado-finalizado-small">
+              <mat-icon matChipAvatar>check</mat-icon>
+              Finalizado
+            </mat-chip>
+
+            <mat-chip
+              class="evento-tipo-badge-small"
+              [ngClass]="{
+                'tipo-publico': !evento.tipoEvento || evento.tipoEvento === 'publico',
+                'tipo-premium': evento.tipoEvento === 'premium',
+                'tipo-vip': evento.tipoEvento === 'vip'
+              }">
+              <mat-icon *ngIf="!evento.tipoEvento || evento.tipoEvento === 'publico'">public</mat-icon>
+              <mat-icon *ngIf="evento.tipoEvento === 'premium'">star</mat-icon>
+              <mat-icon *ngIf="evento.tipoEvento === 'vip'">workspace_premium</mat-icon>
+            </mat-chip>
+          </div>
+
+          <mat-card-content class="evento-pasado-info">
+            <h4>{{ evento.nombre }}</h4>
+            <p class="fecha-pasado">{{ formatearFecha(evento.fecha) }}</p>
+            <p class="lugar-pasado">
+              <mat-icon inline>location_on</mat-icon>
+              {{ evento.lugar }}
+            </p>
+          </mat-card-content>
+
+          <mat-card-actions class="evento-actions">
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="verFeedbacks(evento.id!)"
+              class="btn-ver-feedbacks">
+              <mat-icon>comment</mat-icon>
+              Ver Opiniones
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <div class="ecoday-banner">
+        <h2>ECO-DAY</h2>
+        <h3>¡Vamos a por más<br>en este 2025!</h3>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="notificaciones-container">
+  <!-- Campanita con badge -->
+  <button mat-icon-button
+          class="notificaciones-trigger"
+          [matBadge]="contadorNoLeidas"
+          [matBadgeHidden]="contadorNoLeidas === 0"
+          matBadgeColor="warn"
+          matBadgeSize="small"
+          (click)="togglePanel()"
+          matTooltip="Notificaciones">
+    <mat-icon>notifications</mat-icon>
+  </button>
+
+  <mat-card class="notificaciones-panel" *ngIf="mostrarPanel">
+    <!-- Header -->
+    <mat-card-header class="panel-header">
+      <mat-card-title>
+        <mat-icon>notifications_active</mat-icon>
+      </mat-card-title>
+      <button mat-button
+              class="btn-marcar-todas"
+              *ngIf="notificaciones.length > 0 && contadorNoLeidas > 0"
+              (click)="marcarTodasLeidas()">
+        <mat-icon>done_all</mat-icon>
+        Marcar todas como leídas
+      </button>
+    </mat-card-header>
+
+
+    <mat-card-content class="panel-body">
+      <div *ngIf="cargando" class="loading-notificaciones">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Cargando notificaciones...</p>
+      </div>
+
+      <div *ngIf="!cargando && notificaciones.length === 0" class="sin-notificaciones">
+        <mat-icon class="icono-vacio">notifications_off</mat-icon>
+        <p>No tienes notificaciones</p>
+      </div>
+
+      <mat-list *ngIf="!cargando && notificaciones.length > 0" class="lista-notificaciones">
+        <mat-list-item *ngFor="let notif of notificaciones; let last = last"
+                       class="notificacion-item"
+                       [class.no-leida]="!notif.leida"
+                       (click)="marcarLeida(notif)">
+
+          <mat-icon matListItemIcon class="notif-icono">
+            {{ obtenerIconoNotificacion(notif.tipo) }}
+          </mat-icon>
+
+          <div matListItemTitle class="notif-titulo">
+            {{ notif.titulo }}
+          </div>
+
+          <div matListItemLine class="notif-mensaje">
+            {{ notif.mensaje }}
+          </div>
+
+          <div matListItemLine class="notif-fecha">
+            <mat-icon class="icono-tiempo">access_time</mat-icon>
+            {{ formatearFecha(notif.fecha) }}
+          </div>
+
+          <button mat-icon-button
+                  matListItemMeta
+                  class="btn-eliminar"
+                  (click)="eliminarNotificacion(notif, $event)"
+                  matTooltip="Eliminar notificación">
+            <mat-icon>close</mat-icon>
+          </button>
+
+          <mat-divider *ngIf="!last"></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+
+
+    <mat-card-actions class="panel-footer" *ngIf="notificaciones.length > 0">
+      <button mat-raised-button
+              color="primary"
+              class="btn-ver-todas"
+              (click)="verTodasNotificaciones()">
+        <mat-icon>visibility</mat-icon>
+        Ver todas las notificaciones
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

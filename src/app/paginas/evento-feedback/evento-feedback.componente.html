@@ -1,0 +1,111 @@
+<div class="feedback-container">
+  <mat-card class="feedback-card">
+    <mat-card-header class="header">
+      <mat-icon mat-card-avatar class="header-icon">comment</mat-icon>
+      <mat-card-title>Deja tu Feedback</mat-card-title>
+      <mat-card-subtitle *ngIf="evento">{{ evento.nombre }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="cargando" class="loader">
+        <mat-spinner diameter="60"></mat-spinner>
+        <p>Cargando información...</p>
+      </div>
+
+      <mat-card *ngIf="error && !cargando" class="error-card">
+        <mat-card-content class="error-content">
+          <mat-icon color="warn">warning</mat-icon>
+          <span>{{ error }}</span>
+        </mat-card-content>
+        <mat-card-actions *ngIf="!puedeDejarFeedback">
+          <button mat-raised-button color="primary" (click)="cancelar()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver a Mis Eventos
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div *ngIf="!cargando && puedeDejarFeedback && evento" class="form-container">
+        <mat-card class="evento-info-card">
+          <mat-card-content>
+            <mat-list class="evento-info">
+              <mat-list-item>
+                <mat-icon matListItemIcon>calendar_today</mat-icon>
+                <span matListItemTitle>Fecha</span>
+                <span matListItemLine>{{ formatearFecha(evento.fecha) }}</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              <mat-list-item>
+                <mat-icon matListItemIcon>place</mat-icon>
+                <span matListItemTitle>Lugar</span>
+                <span matListItemLine>{{ evento.lugar }}</span>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="form-group rating-group">
+          <label>
+            <mat-icon class="label-icon">star</mat-icon>
+            ¿Cómo calificarías este evento?
+          </label>
+          <div class="stars-container">
+            <button
+              mat-icon-button
+              *ngFor="let estrella of obtenerEstrellas()"
+              class="star-button"
+              [class.selected]="estaSeleccionada(estrella)"
+              (click)="seleccionarPuntuacion(estrella)"
+              (mouseenter)="onMouseEnter(estrella)"
+              (mouseleave)="onMouseLeave()">
+              <mat-icon class="star-icon">
+                {{ estaSeleccionada(estrella) ? 'star' : 'star_border' }}
+              </mat-icon>
+            </button>
+          </div>
+          <p class="rating-text" *ngIf="puntuacion > 0">
+            <mat-icon class="rating-icon">grade</mat-icon>
+            {{ puntuacion }} de 5 estrellas
+          </p>
+        </div>
+
+        <mat-form-field appearance="outline" class="comentario-field">
+          <mat-label>
+            <mat-icon>chat_bubble</mat-icon>
+            Tu opinión es importante
+          </mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="comentario"
+            placeholder="Cuéntanos tu experiencia en el evento... (mínimo 10 caracteres)"
+            rows="6"
+            [disabled]="enviando"
+            maxlength="500">
+          </textarea>
+          <mat-hint align="end">{{ comentario.length }} / 500 caracteres</mat-hint>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <!-- Botones -->
+    <mat-card-actions *ngIf="!cargando && puedeDejarFeedback && evento" class="buttons-group">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="enviarFeedback()"
+        [disabled]="enviando || puntuacion === 0 || !comentario"
+        class="btn-enviar">
+        <mat-icon>{{ enviando ? 'hourglass_empty' : 'check_circle' }}</mat-icon>
+        {{ enviando ? 'Enviando...' : 'Enviar Feedback' }}
+      </button>
+      <button
+        mat-stroked-button
+        (click)="cancelar()"
+        [disabled]="enviando"
+        class="btn-cancelar">
+        <mat-icon>cancel</mat-icon>
+        Cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,280 @@
+<div class="perfil-container">
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando perfil...</p>
+  </div>
+
+
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarPerfil()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="!cargando && !error">
+    <!-- Header -->
+    <div class="perfil-header">
+      <h1>Mi Perfil</h1>
+      <p>Vea aquí los detalles de su perfil</p>
+    </div>
+
+    <div class="perfil-content">
+      <mat-card class="perfil-card perfil-foto">
+        <mat-card-content>
+          <h2 class="nombre-usuario">{{ nombreCompleto }}</h2>
+
+          <mat-chip-set class="plan-chip">
+            <mat-chip [color]="colorPlan" highlighted>
+              <mat-icon matChipAvatar>{{ iconoPlan }}</mat-icon>
+              {{ nombrePlan }}
+            </mat-chip>
+          </mat-chip-set>
+          <div class="foto-perfil-container">
+            <div class="foto-perfil">
+              <img
+                *ngIf="previsualizacionFoto; else avatarPlaceholder"
+                [src]="previsualizacionFoto"
+                alt="Foto de perfil"
+                class="imagen-perfil">
+
+              <ng-template #avatarPlaceholder>
+                <mat-icon class="avatar-icon">account_circle</mat-icon>
+              </ng-template>
+            </div>
+
+            <div *ngIf="editando" class="cambiar-foto-overlay">
+              <label for="foto-input" class="btn-cambiar-foto">
+                <mat-icon>photo_camera</mat-icon>
+                Cambiar Foto
+              </label>
+              <input
+                type="file"
+                id="foto-input"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                style="display: none;">
+            </div>
+          </div>
+
+
+          <div *ngIf="suscripcionActiva && suscripcionActiva.fechafin" class="fecha-vencimiento">
+            <mat-icon>event</mat-icon>
+            <span>Válido hasta: {{ suscripcionActiva.fechafin | date:'dd/MM/yyyy' }}</span>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="botones-foto">
+            <button
+              *ngIf="!editando"
+              mat-raised-button
+              color="primary"
+              (click)="activarEdicion()"
+              class="btn-full">
+              <mat-icon>edit</mat-icon>
+              Editar Perfil
+            </button>
+
+            <div *ngIf="editando" class="botones-edicion">
+              <button mat-raised-button color="primary" (click)="guardarCambios()">
+                <mat-icon>save</mat-icon>
+                Guardar
+              </button>
+              <button mat-stroked-button (click)="cancelarEdicion()">
+                <mat-icon>close</mat-icon>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="perfil-card perfil-datos">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>person</mat-icon>
+            Datos de Usuario
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                [(ngModel)]="nombre"
+                name="nombre"
+                [disabled]="!editando"
+                required>
+              <mat-icon matPrefix>badge</mat-icon>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Apellidos</mat-label>
+              <input
+                matInput
+                [(ngModel)]="apellidos"
+                name="apellidos"
+                [disabled]="!editando"
+                required>
+              <mat-icon matPrefix>badge</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width campo-bloqueado">
+              <mat-label>Correo</mat-label>
+              <input
+                matInput
+                [value]="perfilCompleto?.email"
+                disabled>
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-hint>Este campo no se puede modificar</mat-hint>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Teléfono</mat-label>
+              <input
+                matInput
+                [(ngModel)]="telefono"
+                name="telefono"
+                [disabled]="!editando"
+                required>
+              <mat-icon matPrefix>phone</mat-icon>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Dirección</mat-label>
+              <input
+                matInput
+                [(ngModel)]="direccion"
+                name="direccion"
+                [disabled]="!editando"
+                required>
+              <mat-icon matPrefix>home</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width campo-bloqueado">
+              <mat-label>Suscripción</mat-label>
+              <input
+                matInput
+                [value]="nombrePlan"
+                disabled>
+              <mat-icon matPrefix [color]="colorPlan">{{ iconoPlan }}</mat-icon>
+              <mat-hint>Para cambiar tu plan, visita la sección de suscripciones</mat-hint>
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="abrirModalContrasena()"
+            class="btn-accion">
+            <mat-icon>lock</mat-icon>
+            Modificar Contraseña
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="irASuscripcion()"
+            class="btn-accion">
+            <mat-icon>star</mat-icon>
+            Adquirir un Plan
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" *ngIf="modalContrasenaAbierto" (click)="cerrarModalContrasena()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>lock_reset</mat-icon>
+        Cambiar Contraseña
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModalContrasena()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (submit)="cambiarContrasena(); $event.preventDefault()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña actual</mat-label>
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="contrasenaActual"
+            name="contrasenaActual"
+            placeholder="Ingresa tu contraseña actual"
+            [disabled]="cargandoContrasena"
+            required>
+          <mat-icon matPrefix>lock</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nueva contraseña</mat-label>
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="contrasenaNueva"
+            name="contrasenaNueva"
+            placeholder="Ingresa tu nueva contraseña"
+            [disabled]="cargandoContrasena"
+            required>
+          <mat-icon matPrefix>lock_open</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmar nueva contraseña</mat-label>
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="confirmarContrasena"
+            name="confirmarContrasena"
+            placeholder="Confirma tu nueva contraseña"
+            [disabled]="cargandoContrasena"
+            required>
+          <mat-icon matPrefix>check_circle</mat-icon>
+        </mat-form-field>
+
+        <mat-error *ngIf="errorContrasena" class="form-error">
+          <mat-icon>error</mat-icon>
+          {{ errorContrasena }}
+        </mat-error>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        (click)="cerrarModalContrasena()"
+        [disabled]="cargandoContrasena">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="cambiarContrasena()"
+        [disabled]="cargandoContrasena">
+        <mat-icon>{{ cargandoContrasena ? 'hourglass_empty' : 'save' }}</mat-icon>
+        {{ cargandoContrasena ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

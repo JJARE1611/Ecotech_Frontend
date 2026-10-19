@@ -1,0 +1,446 @@
+<div class="admin-productos-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <h1>Gestión de Productos</h1>
+    <button mat-raised-button color="primary" (click)="abrirModalCrear()">
+      <mat-icon>add</mat-icon>
+      Crear Nuevo Producto
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <div class="filtros-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <mat-select [(ngModel)]="filtroCategoria" (selectionChange)="aplicarFiltros()">
+            <mat-option value="">Todas las categorías</mat-option>
+            <mat-option *ngFor="let cat of categoriasDisponibles" [value]="cat">
+              {{ cat }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="filtroEstado" (selectionChange)="aplicarFiltros()">
+            <mat-option value="">Todos los estados</mat-option>
+            <mat-option value="activo">Activo</mat-option>
+            <mat-option value="agotado">Agotado</mat-option>
+            <mat-option value="inactivo">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          (click)="limpiarFiltros()"
+          *ngIf="filtroCategoria || filtroEstado">
+          <mat-icon>refresh</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando productos...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarProductos()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Grid de Productos -->
+  <div *ngIf="!cargando && !error" class="productos-grid">
+    <mat-card *ngFor="let producto of productos" class="producto-card">
+      <!-- Badge de puntos -->
+      <mat-chip-set class="producto-chips">
+        <mat-chip color="primary" highlighted>
+          {{ producto.puntosrequerido }} Eco-Puntos
+        </mat-chip>
+        <mat-chip [color]="obtenerColorEstado(producto.estado)" highlighted>
+          <mat-icon>{{ obtenerIconoEstado(producto.estado) }}</mat-icon>
+          {{ producto.estado | titlecase }}
+        </mat-chip>
+      </mat-chip-set>
+
+      <!-- Imagen del producto -->
+      <div class="producto-imagen"
+           [style.background-image]="producto.imagen ? 'url(' + producto.imagen + ')' : 'none'">
+        <mat-icon *ngIf="!producto.imagen" class="icono-producto">card_giftcard</mat-icon>
+      </div>
+
+      <mat-card-content>
+        <h3>{{ producto.nombre }}</h3>
+
+        <!-- Categoría -->
+        <mat-chip-set *ngIf="producto.categoria">
+          <mat-chip>
+            <mat-icon matChipAvatar>category</mat-icon>
+            {{ producto.categoria }}
+          </mat-chip>
+        </mat-chip-set>
+
+        <p class="producto-descripcion">{{ producto.descripcion }}</p>
+
+        <!-- Información adicional -->
+        <div class="producto-info-grid">
+          <div class="info-item">
+            <mat-icon>inventory_2</mat-icon>
+            <span>
+              Stock:
+              <strong [class.stock-bajo]="producto.stock === 0"
+                      [class.stock-medio]="producto.stock > 0 && producto.stock <= 10">
+                {{ producto.stock }} unidades
+              </strong>
+            </span>
+          </div>
+
+          <div class="info-item" *ngIf="producto.precioReferencia">
+            <mat-icon>attach_money</mat-icon>
+            <span>
+              <strong>{{ formatearPrecio(producto.precioReferencia) }}</strong>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>{{ obtenerIconoEntregaDigital(producto.permiteEntregaDigital) }}</mat-icon>
+            <span>{{ producto.permiteEntregaDigital ? 'Digital' : 'Físico' }}</span>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ formatearFecha(producto.fecha) }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <!-- Acciones principales -->
+      <mat-card-actions>
+        <button
+          mat-button
+          color="primary"
+          (click)="abrirModalEditar(producto)"
+          matTooltip="Editar producto">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+        <button
+          mat-button
+          color="warn"
+          (click)="eliminarProducto(producto)"
+          matTooltip="Eliminar producto">
+          <mat-icon>delete</mat-icon>
+          Eliminar
+        </button>
+      </mat-card-actions>
+
+      <!-- Acciones rápidas -->
+      <mat-card-actions class="acciones-rapidas">
+        <button
+          mat-stroked-button
+          (click)="actualizarStockRapido(producto)"
+          matTooltip="Actualizar stock">
+          <mat-icon>inventory</mat-icon>
+          Stock
+        </button>
+        <button
+          mat-stroked-button
+          (click)="cambiarEstadoRapido(producto, producto.estado === 'activo' ? 'inactivo' : 'activo')"
+          matTooltip="Cambiar estado">
+          <mat-icon>sync</mat-icon>
+          Estado
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Sin productos -->
+    <div *ngIf="productos.length === 0" class="sin-productos">
+      <mat-icon class="icon-vacio">inventory_2</mat-icon>
+      <p>No hay productos {{ filtroCategoria || filtroEstado ? 'que coincidan con los filtros' : 'creados todavía' }}.</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="limpiarFiltros()"
+        *ngIf="filtroCategoria || filtroEstado">
+        Limpiar filtros
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="abrirModalCrear()"
+        *ngIf="!filtroCategoria && !filtroEstado">
+        Crear mi primer producto
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear/Editar -->
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ modoEdicion ? 'edit' : 'add_circle' }}</mat-icon>
+        {{ modoEdicion ? 'Editar Producto' : 'Crear Nuevo Producto' }}
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModal()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (submit)="guardarProducto(); $event.preventDefault()">
+        <!-- Información básica -->
+        <h3 class="seccion-titulo">
+          <mat-icon>description</mat-icon>
+          Información Básica
+        </h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre del Producto</mat-label>
+          <input
+            matInput
+            [(ngModel)]="nombre"
+            name="nombre"
+            placeholder="Ej: Botella Reutilizable"
+            [disabled]="guardando"
+            required>
+          <mat-icon matPrefix>label</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="descripcion"
+            name="descripcion"
+            rows="4"
+            placeholder="Describe el producto..."
+            [disabled]="guardando"
+            required></textarea>
+          <mat-icon matPrefix>notes</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de Disponibilidad</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [formControl]="fechaControl"
+              [disabled]="guardando"
+              required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Puntos Requeridos</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="puntosrequerido"
+              name="puntosrequerido"
+              min="1"
+              placeholder="Ej: 100"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>stars</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Stock y Precio -->
+        <h3 class="seccion-titulo">
+          <mat-icon>inventory</mat-icon>
+          Stock y Precio
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Stock Disponible</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="stock"
+              name="stock"
+              min="0"
+              placeholder="Ej: 50"
+              [disabled]="guardando"
+              required>
+            <mat-icon matPrefix>inventory_2</mat-icon>
+            <mat-hint>Cantidad de unidades disponibles</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Precio Referencial (S/)</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="precioReferencia"
+              name="precioReferencia"
+              min="0"
+              step="0.01"
+              placeholder="Ej: 25.50"
+              [disabled]="guardando">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <mat-hint>Opcional - valor monetario del producto</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Categoría y Estado -->
+        <h3 class="seccion-titulo">
+          <mat-icon>category</mat-icon>
+          Clasificación
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Categoría</mat-label>
+            <mat-select
+              [(ngModel)]="categoria"
+              name="categoria"
+              [disabled]="guardando">
+              <mat-option value="">Seleccione una categoría</mat-option>
+              <mat-option *ngFor="let cat of categoriasDisponibles" [value]="cat">
+                {{ cat }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+            <mat-hint>Opcional - agrupa productos similares</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select
+              [(ngModel)]="estado"
+              name="estado"
+              [disabled]="guardando"
+              required>
+              <mat-option value="activo">
+                <mat-icon>check_circle</mat-icon> Activo
+              </mat-option>
+              <mat-option value="agotado">
+                <mat-icon>warning</mat-icon> Agotado
+              </mat-option>
+              <mat-option value="inactivo">
+                <mat-icon>cancel</mat-icon> Inactivo
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>settings</mat-icon>
+            <mat-hint>Controla la disponibilidad del producto</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Opciones de Entrega -->
+        <h3 class="seccion-titulo">
+          <mat-icon>local_shipping</mat-icon>
+          Opciones de Entrega
+        </h3>
+
+        <mat-checkbox
+          [(ngModel)]="permiteEntregaDigital"
+          name="permiteEntregaDigital"
+          [disabled]="guardando"
+          color="primary">
+          <mat-icon>computer</mat-icon>
+          Permite entrega digital
+        </mat-checkbox>
+        <p class="checkbox-hint">
+          Marcar solo para productos digitales como: gift cards, software, licencias, vales, cupones, eBooks, etc.
+        </p>
+
+        <!-- Imagen del Producto -->
+        <h3 class="seccion-titulo">
+          <mat-icon>image</mat-icon>
+          Imagen del Producto
+        </h3>
+
+        <!-- Selector de Imagen -->
+        <div class="upload-container">
+          <input
+            type="file"
+            id="imagenProductoInput"
+            accept="image/*"
+            (change)="onArchivoSeleccionado($event)"
+            style="display: none">
+
+          <button
+            type="button"
+            mat-raised-button
+            color="accent"
+            (click)="abrirSelectorArchivos()"
+            [disabled]="guardando || subiendoImagen">
+            <mat-icon>cloud_upload</mat-icon>
+            {{ imagenPreview ? 'Cambiar Imagen' : 'Subir Imagen' }}
+          </button>
+
+          <p class="upload-hint">
+            <mat-icon>info</mat-icon>
+            Formatos: JPG, PNG, GIF. Máximo 5MB
+          </p>
+        </div>
+
+        <!-- Preview de imagen -->
+        <div class="imagen-preview" *ngIf="imagenPreview">
+          <div class="preview-header">
+            <p class="preview-label">Vista previa:</p>
+            <button
+              type="button"
+              mat-icon-button
+              color="warn"
+              (click)="eliminarImagen()"
+              [disabled]="guardando"
+              matTooltip="Eliminar imagen">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <img [src]="imagenPreview" alt="Preview" />
+          <p class="archivo-info" *ngIf="archivoSeleccionado">
+            <mat-icon>insert_drive_file</mat-icon>
+            {{ archivoSeleccionado.name }} ({{ (archivoSeleccionado.size / 1024 / 1024).toFixed(2) }} MB)
+          </p>
+        </div>
+
+        <!-- Indicador de carga -->
+        <div class="subiendo-imagen" *ngIf="subiendoImagen">
+          <mat-spinner diameter="30"></mat-spinner>
+          <span>Procesando imagen...</span>
+        </div>
+
+        <!-- Error del formulario -->
+        <mat-error *ngIf="errorFormulario" class="form-error">
+          <mat-icon>error</mat-icon>
+          {{ errorFormulario }}
+        </mat-error>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        (click)="cerrarModal()"
+        [disabled]="guardando">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="guardarProducto()"
+        [disabled]="guardando">
+        <mat-icon>{{ guardando ? 'hourglass_empty' : 'save' }}</mat-icon>
+        {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Crear Producto') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

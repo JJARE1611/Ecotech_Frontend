@@ -1,0 +1,80 @@
+<mat-sidenav-container class="admin-layout" [class.menu-cerrado]="!menuAbierto">
+  <!-- Sidebar -->
+  <mat-sidenav
+    mode="side"
+    opened="true"
+    class="admin-sidebar"
+    [style.width]="menuAbierto ? '280px' : '80px'">
+
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <mat-icon>eco</mat-icon>
+        </div>
+        <span *ngIf="menuAbierto">EcoTech Admin</span>
+      </div>
+      <button
+        mat-icon-button
+        class="btn-toggle"
+        (click)="toggleMenu()"
+        [matTooltip]="menuAbierto ? 'Contraer menú' : 'Expandir menú'">
+        <mat-icon>{{ menuAbierto ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+      </button>
+    </div>
+
+    <!-- Menu Items -->
+    <mat-nav-list class="sidebar-menu">
+      <a
+        mat-list-item
+        *ngFor="let item of menuItems"
+        [routerLink]="item.ruta"
+        routerLinkActive="activo"
+        class="menu-item"
+        [matTooltip]="!menuAbierto ? item.titulo : ''"
+        matTooltipPosition="right">
+        <mat-icon matListItemIcon class="icono">{{ item.icono }}</mat-icon>
+        <span matListItemTitle class="titulo" *ngIf="menuAbierto">{{ item.titulo }}</span>
+      </a>
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <!-- Usuario Info -->
+      <div class="usuario-info" *ngIf="menuAbierto && usuarioActual">
+        <div class="avatar">{{ usuarioActual.email.charAt(0).toUpperCase() }}</div>
+        <div class="info">
+          <p class="nombre">{{ usuarioActual.email.split('@')[0] }}</p>
+          <p class="rol">Administrador</p>
+        </div>
+      </div>
+
+      <!-- Botón Volver al sitio -->
+      <button
+        mat-stroked-button
+        class="btn-footer"
+        (click)="volverAlSitio()"
+        [matTooltip]="!menuAbierto ? 'Volver al sitio' : ''">
+        <mat-icon>home</mat-icon>
+        <span *ngIf="menuAbierto">Volver al sitio</span>
+      </button>
+
+      <!-- Botón Cerrar sesión -->
+      <button
+        mat-stroked-button
+        class="btn-footer logout"
+        (click)="cerrarSesion()"
+        [matTooltip]="!menuAbierto ? 'Cerrar sesión' : ''">
+        <mat-icon>logout</mat-icon>
+        <span *ngIf="menuAbierto">Cerrar sesión</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <!-- Contenido principal -->
+  <mat-sidenav-content class="admin-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

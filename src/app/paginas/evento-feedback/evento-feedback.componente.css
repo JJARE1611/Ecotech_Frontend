@@ -1,0 +1,367 @@
+.feedback-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.feedback-card {
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  text-align: center;
+  padding: 32px 32px 24px !important;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.header-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  font-size: 36px !important;
+  width: 60px !important;
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 16px !important;
+}
+
+.header mat-card-title {
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #2c3e50;
+  margin: 0 0 8px 0 !important;
+}
+
+.header mat-card-subtitle {
+  font-size: 18px !important;
+  color: #7f8c8d;
+  margin: 0 !important;
+}
+
+
+.feedback-card mat-card-content {
+  padding: 32px !important;
+}
+
+
+.loader {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loader p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.error-card {
+  background: #ffebee;
+  border: 2px solid #ef5350;
+  margin-bottom: 24px;
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px !important;
+  color: #c62828;
+  font-weight: 600;
+}
+
+.error-content mat-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.error-card mat-card-actions {
+  padding: 0 20px 20px !important;
+  justify-content: center;
+}
+
+
+.form-container {
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.evento-info-card {
+  margin-bottom: 32px;
+  background: #f8f9fa;
+}
+
+.evento-info-card mat-card-content {
+  padding: 0 !important;
+}
+
+.evento-info {
+  padding: 0 !important;
+}
+
+.evento-info mat-list-item {
+  height: auto !important;
+  min-height: 60px;
+  padding: 16px !important;
+}
+
+::ng-deep .evento-info .mat-mdc-list-item-icon {
+  color: #667eea;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+::ng-deep .evento-info .mdc-list-item__primary-text {
+  font-weight: 600;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+::ng-deep .evento-info .mdc-list-item__secondary-text {
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+/* ========== RATING GROUP ========== */
+.form-group {
+  margin-bottom: 32px;
+}
+
+.rating-group {
+  text-align: center;
+}
+
+.rating-group label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.label-icon {
+  color: #ffd700;
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* ========== STARS ========== */
+.stars-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.star-button {
+  transition: all 0.2s;
+}
+
+.star-button:hover {
+  transform: scale(1.2);
+}
+
+.star-button.selected {
+  animation: starPulse 0.3s;
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+.star-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #ddd;
+}
+
+.star-button.selected .star-icon {
+  color: #ffd700;
+}
+
+.star-button:hover .star-icon {
+  color: #ffd700;
+}
+
+.rating-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 18px;
+  margin-top: 16px;
+}
+
+.rating-icon {
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* ========== COMENTARIO FIELD ========== */
+.comentario-field {
+  width: 100%;
+  font-size: 16px;
+}
+
+::ng-deep .comentario-field .mat-mdc-form-field-icon-prefix mat-icon {
+  margin-right: 8px;
+}
+
+::ng-deep .comentario-field textarea {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ========== BUTTONS ========== */
+.buttons-group {
+  padding: 24px 32px !important;
+  border-top: 2px solid #f0f0f0;
+  display: flex;
+  gap: 16px;
+}
+
+.btn-enviar,
+.btn-cancelar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+}
+
+.btn-enviar mat-icon,
+.btn-cancelar mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.btn-enviar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  transition: all 0.3s;
+}
+
+.btn-enviar:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3) !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .feedback-container {
+    padding: 1rem;
+  }
+
+  .feedback-card {
+    margin: 0;
+  }
+
+  .header {
+    padding: 24px 20px 20px !important;
+  }
+
+  .header mat-card-title {
+    font-size: 24px !important;
+  }
+
+  .header-icon {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 28px !important;
+  }
+
+  .feedback-card mat-card-content {
+    padding: 20px !important;
+  }
+
+  .star-icon {
+    font-size: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .buttons-group {
+    flex-direction: column;
+    padding: 20px !important;
+  }
+
+  .btn-enviar,
+  .btn-cancelar {
+    width: 100%;
+  }
+
+  .rating-group label {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feedback-container {
+    padding: 0.5rem;
+  }
+
+  .header mat-card-title {
+    font-size: 20px !important;
+  }
+
+  .star-icon {
+    font-size: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .stars-container {
+    gap: 4px;
+  }
+
+  .evento-info mat-list-item {
+    min-height: 50px;
+    padding: 12px !important;
+  }
+}

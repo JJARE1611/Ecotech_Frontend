@@ -1,0 +1,879 @@
+/* ========== HERO SECTION ========== */
+.deposito-hero {
+  height: 40vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  url('https://i.pinimg.com/1200x/0f/ba/17/0fba178a547f22db923c5e1de2e1a9b6.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.deposito-hero h1 {
+  font-size: 56px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+}
+
+/* ========== CONTENIDO PRINCIPAL ========== */
+.deposito-contenido {
+  background: white;
+}
+
+.deposito-contenido h2 {
+  font-size: 36px;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ========== TIPOS DE DEPÓSITO ========== */
+.seccion-tipos {
+  padding: 80px 60px;
+  background: white;
+}
+
+.info-card {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tipos-grid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.tipo-imagen {
+  width: 100%;
+  height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.tipo-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tipo-info {
+  background: #1a4d2e;
+  color: white;
+  padding: 50px;
+  border-radius: 20px;
+}
+
+.tipo-info h2 {
+  color: white;
+  text-align: left;
+  justify-content: flex-start;
+  margin-bottom: 25px;
+}
+
+.tipo-info p {
+  font-size: 16px;
+  line-height: 1.8;
+  text-align: justify;
+  margin: 0;
+}
+
+/* ========== GUÍA DE RECICLAJE ========== */
+.seccion-guia {
+  padding: 80px 60px;
+  background: #f5f5f5;
+}
+
+.guia-card {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.guia-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 60px;
+  align-items: center;
+}
+
+.guia-texto h2 {
+  text-align: left;
+  justify-content: flex-start;
+  margin-bottom: 25px;
+  font-size: 32px;
+}
+
+.guia-texto p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.guia-texto .highlight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #1a4d2e;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 10px;
+  border-left: 4px solid #1a4d2e;
+}
+
+.guia-texto .highlight mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.guia-imagen {
+  width: 100%;
+  height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.guia-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========== MAPA DE CALOR ========== */
+.seccion-mapa {
+  padding: 80px 60px;
+  background: white;
+}
+
+.mapa-card {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mapa-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+}
+
+.mapa-iframe {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.mapa-detalles {
+  padding: 30px;
+  background: #f5f5f5;
+  border-radius: 15px;
+}
+
+.mapa-detalles h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+.mapa-titulo {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.mapa-lista {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.mapa-lista li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.mapa-lista mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mapa-consejo {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 15px;
+  background: #fff3cd;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.mapa-consejo mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #ff9800;
+  flex-shrink: 0;
+}
+
+.mapa-consejo p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ========== PUNTOS DE RECICLAJE ========== */
+.seccion-puntos {
+  padding: 80px 60px;
+  background: #f5f5f5;
+}
+
+.puntos-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.puntos-mapa {
+  position: relative;
+}
+
+.punto-destacado {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  max-width: 300px;
+  z-index: 10;
+}
+
+.punto-destacado mat-card-content {
+  padding: 20px !important;
+}
+
+.punto-destacado h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: #1a4d2e;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.punto-destacado p {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+/* ========== SISTEMA DE PUNTAJE ========== */
+.seccion-puntaje {
+  padding: 80px 60px;
+  background: white;
+}
+
+.puntaje-card {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.puntaje-card table {
+  width: 100%;
+}
+
+.puntaje-card th {
+  background: #1a4d2e;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 20px;
+}
+
+.puntaje-card td {
+  padding: 25px 20px;
+  font-size: 15px;
+}
+
+.puntaje-card tr:hover {
+  background: #f5f5f5;
+}
+
+.tipo-residuo-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tipo-residuo-cell mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #1a4d2e;
+}
+
+/* ========== REPORTAR ÁREA ========== */
+.seccion-reportar {
+  padding: 80px 60px;
+  background: #f5f5f5;
+}
+
+.form-card {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.form-card mat-card-content {
+  padding: 40px !important;
+}
+
+.form-card mat-form-field {
+  margin-bottom: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ========== SECCIÓN DE PRUEBAS MEJORADA ========== */
+.pruebas-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 12px;
+}
+
+.pruebas-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.pruebas-label mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #1a4d2e;
+}
+
+.btn-subir-imagen {
+  max-width: 250px;
+}
+
+.imagenes-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.preview-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.preview-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-eliminar-preview {
+  position: absolute !important;
+  top: 8px;
+  right: 8px;
+  background: rgba(244, 67, 54, 0.9) !important;
+  color: white !important;
+}
+
+.btn-eliminar-preview:hover {
+  background: rgba(211, 47, 47, 1) !important;
+}
+
+.archivos-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4CAF50;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.archivos-info mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.puntos-estimados {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #FF9800;
+  font-weight: 700;
+}
+
+.puntos-estimados mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.form-card mat-divider {
+  margin: 25px 0;
+}
+
+.form-acciones {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-enviar {
+  flex: 2;
+}
+
+.form-acciones button {
+  flex: 1;
+}
+
+/* ========== MENSAJE LOGIN ========== */
+.mensaje-login-card {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mensaje-login-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 60px 40px !important;
+}
+
+.mensaje-login-card mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ff9800;
+}
+
+.mensaje-login-card p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ========== HISTORIAL ========== */
+.seccion-historial {
+  padding: 80px 60px;
+  background: white;
+}
+
+.historial-loading {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.historial-loading p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.sin-reportes {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.sin-reportes-icono {
+  font-size: 80px !important;
+  width: 80px !important;
+  height: 80px !important;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.sin-reportes h3 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.sin-reportes p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.historial-cards {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.btn-navegacion {
+  flex-shrink: 0;
+}
+
+.btn-navegacion mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.reporte-card {
+  flex: 1;
+  min-height: 500px;
+}
+
+.reporte-card mat-card-header {
+  padding: 24px 24px 16px !important;
+}
+
+.reporte-card mat-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 20px !important;
+  margin: 0 !important;
+}
+
+.reporte-card mat-card-content {
+  padding: 20px 24px !important;
+}
+
+.reporte-detalle {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.reporte-detalle:last-of-type {
+  border-bottom: none;
+}
+
+.reporte-detalle mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #1a4d2e;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.reporte-detalle div {
+  flex: 1;
+}
+
+.reporte-detalle strong {
+  display: block;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.reporte-detalle span {
+  display: block;
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+.reporte-card mat-divider {
+  margin: 20px 0;
+}
+
+.reporte-estado,
+.reporte-puntos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.reporte-estado strong,
+.reporte-puntos strong {
+  font-size: 15px;
+  color: #666;
+}
+
+.reporte-puntos {
+  padding: 15px;
+  background: #fff3e0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.reporte-puntos mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #ff9800;
+}
+
+.puntos-valor {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff9800;
+}
+
+/* ========== IMÁGENES EN HISTORIAL ========== */
+.reporte-imagenes {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.reporte-imagenes > mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #1a4d2e;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.reporte-imagenes > div {
+  flex: 1;
+}
+
+.reporte-imagenes strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.imagen-prueba {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.imagen-prueba:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.reporte-card mat-card-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  margin: 0 !important;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ========== MODAL DE IMAGEN COMPLETA ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-imagen-overlay {
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.modal-imagen-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.3s;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-imagen-content img {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.btn-cerrar-imagen {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  background: rgba(244, 67, 54, 0.9) !important;
+  color: white !important;
+  z-index: 10;
+}
+
+.btn-cerrar-imagen:hover {
+  background: rgba(211, 47, 47, 1) !important;
+}
+
+/* ========== SNACKBAR ========== */
+::ng-deep .snackbar-success {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 968px) {
+  .deposito-hero h1 {
+    font-size: 36px;
+  }
+
+  .tipos-grid,
+  .guia-grid,
+  .mapa-container {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-tipos,
+  .seccion-guia,
+  .seccion-mapa,
+  .seccion-puntos,
+  .seccion-puntaje,
+  .seccion-reportar,
+  .seccion-historial {
+    padding: 40px 20px;
+  }
+
+  .tipo-info,
+  .form-card mat-card-content,
+  .mensaje-login-card mat-card-content {
+    padding: 30px 20px !important;
+  }
+
+  .punto-destacado {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-top: 20px;
+    max-width: 100%;
+  }
+
+  .historial-cards {
+    flex-direction: column;
+  }
+
+  .form-acciones {
+    flex-direction: column;
+  }
+
+  .deposito-contenido h2 {
+    font-size: 28px;
+  }
+
+  .imagenes-preview {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .imagenes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .reporte-card mat-card-title {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .modal-imagen-content {
+    padding: 10px;
+  }
+}

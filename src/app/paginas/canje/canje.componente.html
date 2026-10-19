@@ -1,0 +1,381 @@
+<div class="canje-container">
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando productos...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <h2>Error</h2>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarProductos()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!cargando && !error">
+    <!-- Header -->
+    <div class="canje-header">
+      <h1>Canje de Eco Puntos</h1>
+    </div>
+
+    <!-- Filtros y puntos -->
+    <mat-card class="filtros-card">
+      <mat-card-content>
+        <div class="filtros-container">
+          <!-- Búsqueda -->
+          <mat-form-field appearance="outline" class="filtro-busqueda">
+            <mat-label>Buscar productos</mat-label>
+            <input
+              matInput
+              [(ngModel)]="busqueda"
+              (input)="filtrarProductos()"
+              placeholder="Buscar por nombre o rango de puntos">
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Categoría -->
+          <mat-form-field appearance="outline" class="filtro-categoria">
+            <mat-label>Categoría</mat-label>
+            <mat-select [(ngModel)]="filtroCategoria" (selectionChange)="filtrarProductos()">
+              <mat-option value="">Todas las categorías</mat-option>
+              <mat-option *ngFor="let cat of categoriasDisponibles" [value]="cat">
+                {{ cat }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+
+          <!-- Botón limpiar -->
+          <button
+            mat-stroked-button
+            (click)="limpiarFiltros()"
+            *ngIf="busqueda || filtroCategoria"
+            class="btn-limpiar">
+            <mat-icon>refresh</mat-icon>
+            Limpiar
+          </button>
+
+          <!-- Badge de puntos -->
+          <mat-chip-set class="puntos-chip">
+            <mat-chip color="primary" highlighted>
+              <mat-icon matChipAvatar>stars</mat-icon>
+              {{ puntosDisponibles }} pts
+            </mat-chip>
+          </mat-chip-set>
+
+          <!-- Badge del plan -->
+          <mat-chip-set class="plan-chip">
+            <mat-chip [color]="obtenerColorPlan()" highlighted>
+              <mat-icon matChipAvatar>{{ obtenerIconoPlan() }}</mat-icon>
+              Plan {{ planUsuario }}
+              <span *ngIf="descuentoCanjes > 0" class="descuento-texto">
+                -{{ descuentoCanjes }}%
+              </span>
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Grid de productos -->
+    <div class="productos-grid">
+      <mat-card *ngFor="let producto of productosFiltrados" class="producto-card">
+        <!-- Chips superiores -->
+        <mat-chip-set class="producto-chips">
+          <mat-chip *ngIf="producto.categoria" [color]="obtenerColorCategoria(producto.categoria)" highlighted>
+            {{ producto.categoria }}
+          </mat-chip>
+          <mat-chip [color]="producto.stock <= 5 ? 'warn' : 'primary'" highlighted>
+            <mat-icon matChipAvatar>inventory_2</mat-icon>
+            {{ producto.stock }}
+          </mat-chip>
+        </mat-chip-set>
+
+        <!-- Imagen -->
+        <div class="producto-imagen">
+          <img [src]="obtenerImagenProducto(producto)" [alt]="producto.nombre">
+        </div>
+
+        <mat-card-content>
+          <h3>{{ producto.nombre }}</h3>
+
+          <!-- Puntos -->
+          <div class="producto-puntos">
+            <mat-icon color="warn">stars</mat-icon>
+            <span class="puntos-cantidad">{{ producto.puntosrequerido }}</span>
+            <span class="puntos-texto">Eco-Puntos</span>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <p class="producto-descripcion">{{ producto.descripcion }}</p>
+
+          <!-- Precio referencial -->
+          <div class="producto-precio" *ngIf="producto.precioReferencia">
+            <mat-icon>attach_money</mat-icon>
+            <span>S/ {{ producto.precioReferencia.toFixed(2) }}</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="abrirModal(producto)"
+            [disabled]="producto.puntosrequerido > puntosDisponibles || producto.stock === 0 || producto.estado !== 'activo'"
+            class="btn-canjear">
+            <mat-icon>redeem</mat-icon>
+            <span *ngIf="producto.stock === 0">Sin Stock</span>
+            <span *ngIf="producto.stock > 0 && producto.estado === 'activo'">Canjear</span>
+            <span *ngIf="producto.estado !== 'activo' && producto.stock > 0">No Disponible</span>
+          </button>
+          <button
+            mat-stroked-button
+            (click)="verMas(producto)"
+            class="btn-ver-mas">
+            <mat-icon>info</mat-icon>
+            Ver más
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Sin productos -->
+    <div *ngIf="productosFiltrados.length === 0" class="sin-productos">
+      <mat-icon class="icon-vacio">inventory_2</mat-icon>
+      <p>No se encontraron productos disponibles</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="limpiarFiltros()"
+        *ngIf="busqueda || filtroCategoria">
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>redeem</mat-icon>
+        Confirmar Canje
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModal()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Info del producto -->
+      <div class="modal-producto-info">
+        <h3>{{ productoSeleccionado?.nombre }}</h3>
+        <p>{{ productoSeleccionado?.descripcion }}</p>
+
+        <div class="detalles-grid">
+          <div class="detalle-item">
+            <mat-icon>inventory_2</mat-icon>
+            <span>Stock: {{ productoSeleccionado?.stock }} unidades</span>
+          </div>
+          <div class="detalle-item" *ngIf="productoSeleccionado?.categoria">
+            <mat-icon>category</mat-icon>
+            <span>{{ productoSeleccionado?.categoria }}</span>
+          </div>
+          <div class="detalle-item" *ngIf="productoSeleccionado?.precioReferencia">
+            <mat-icon>attach_money</mat-icon>
+            <span>S/ {{ productoSeleccionado?.precioReferencia?.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <div class="puntos-unidad">
+          <span>Puntos por unidad:</span>
+          <span class="puntos-numero">{{ productoSeleccionado?.puntosrequerido }}</span>
+        </div>
+      </div>
+
+      <!-- Cantidad -->
+      <div class="modal-cantidad">
+        <label>Cantidad:</label>
+        <div class="cantidad-control">
+          <button mat-icon-button (click)="disminuirCantidad()" [disabled]="cantidadCanje <= 1">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <mat-form-field appearance="outline" class="cantidad-input">
+            <input matInput type="number" [(ngModel)]="cantidadCanje" min="1" [max]="productoSeleccionado?.stock ?? 0" readonly>
+          </mat-form-field>
+          <button mat-icon-button (click)="aumentarCantidad()" [disabled]="!tieneStockDisponible() || cantidadCanje >= (productoSeleccionado?.stock || 0)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <mat-hint *ngIf="productoSeleccionado">Máximo: {{ productoSeleccionado.stock }} unidades</mat-hint>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Método de entrega -->
+      <div class="modal-metodo">
+        <h4>
+          <mat-icon>local_shipping</mat-icon>
+          Método de entrega
+        </h4>
+        <mat-radio-group [(ngModel)]="metodoEntregaSeleccionado" class="metodos-grid">
+          <mat-radio-button
+            *ngFor="let metodo of metodosEntrega"
+            [value]="metodo"
+            [disabled]="metodo === 'digital' && !permiteDigital"
+            (click)="seleccionarMetodoEntrega(metodo)">
+            <div class="metodo-contenido">
+              <mat-icon>
+                {{ metodo === 'digital' ? 'computer' : metodo === 'físico' ? 'local_shipping' : 'store' }}
+              </mat-icon>
+              <span>{{ metodo }}</span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Formulario de dirección -->
+      <div class="modal-direccion" *ngIf="metodoEntregaSeleccionado === 'físico'">
+        <h4>
+          <mat-icon>location_on</mat-icon>
+          Datos de Entrega
+        </h4>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección completa *</mat-label>
+          <input matInput [(ngModel)]="direccionEntrega" placeholder="Ej: Av. Principal 123, Dpto 456">
+          <mat-icon matPrefix>home</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Ciudad *</mat-label>
+            <input matInput [(ngModel)]="ciudad" placeholder="Ej: Lima">
+            <mat-icon matPrefix>location_city</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Código Postal</mat-label>
+            <input matInput [(ngModel)]="codigoPostal" placeholder="Ej: 15001">
+            <mat-icon matPrefix>pin</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teléfono *</mat-label>
+          <input matInput type="tel" [(ngModel)]="telefono" placeholder="Ej: 987654321">
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Referencia (opcional)</mat-label>
+          <input matInput [(ngModel)]="referencia" placeholder="Ej: Casa blanca con reja negra">
+          <mat-icon matPrefix>description</mat-icon>
+        </mat-form-field>
+
+        <p class="form-nota">
+          <mat-icon>info</mat-icon>
+          Los campos marcados con * son obligatorios
+        </p>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Resumen -->
+      <div class="modal-resumen">
+        <h4>Resumen del Canje</h4>
+
+        <div class="resumen-fila">
+          <span>Cantidad:</span>
+          <span>{{ cantidadCanje }}</span>
+        </div>
+
+        <div class="resumen-fila">
+          <span>Puntos por unidad:</span>
+          <div class="puntos-detalle">
+            <span class="puntos-original" *ngIf="descuentoCanjes > 0">
+              <del>{{ productoSeleccionado?.puntosrequerido }}</del>
+            </span>
+            <span [class.puntos-descuento]="descuentoCanjes > 0">
+              {{ calcularPuntosConDescuento(productoSeleccionado?.puntosrequerido || 0) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="resumen-fila descuento-row" *ngIf="descuentoCanjes > 0">
+          <span>
+            <mat-icon>auto_awesome</mat-icon>
+            Descuento {{ planUsuario }}:
+          </span>
+          <span class="descuento-valor">-{{ descuentoCanjes }}%</span>
+        </div>
+
+        <div class="resumen-fila">
+          <span>Método de entrega:</span>
+          <span class="metodo-valor">{{ metodoEntregaSeleccionado }}</span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="resumen-fila total">
+          <span>Total a usar:</span>
+          <span>{{ calcularPuntosTotal() }} pts</span>
+        </div>
+
+        <div class="resumen-fila ahorro-row" *ngIf="calcularAhorro() > 0">
+          <span>
+            <mat-icon>savings</mat-icon>
+            Ahorraste:
+          </span>
+          <span class="ahorro-valor">{{ calcularAhorro() }} pts</span>
+        </div>
+
+        <div class="resumen-fila">
+          <span>Puntos restantes:</span>
+          <span [class.puntos-insuficientes]="!tienePuntosSuficientes()">
+            {{ puntosDisponibles - calcularPuntosTotal() }} pts
+          </span>
+        </div>
+      </div>
+
+      <!-- Advertencias -->
+      <mat-error *ngIf="!tienePuntosSuficientes()" class="advertencia">
+        <mat-icon>warning</mat-icon>
+        No tienes suficientes Eco-Puntos para este canje
+      </mat-error>
+
+      <mat-error *ngIf="!tieneStockDisponible()" class="advertencia">
+        <mat-icon>warning</mat-icon>
+        No hay suficiente stock disponible
+      </mat-error>
+
+      <!-- Info adicional -->
+      <div class="info-adicional">
+        <mat-icon>info</mat-icon>
+        <p>Tu canje quedará en estado <strong>"Pendiente"</strong> hasta que sea aprobado por un administrador.</p>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button (click)="cerrarModal()" [disabled]="canjeando">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="confirmarCanje()"
+        [disabled]="canjeando || !tienePuntosSuficientes() || !tieneStockDisponible()">
+        <mat-icon>{{ canjeando ? 'hourglass_empty' : 'check_circle' }}</mat-icon>
+        {{ canjeando ? 'Canjeando...' : 'Confirmar Canje' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

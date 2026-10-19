@@ -1,0 +1,431 @@
+<div class="admin-depositos-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <h1>Gestión de Depósitos</h1>
+    <p class="subtitle">Valida los reportes de áreas contaminadas</p>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas-depositos">
+    <mat-card class="stat-card pendiente">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icono">schedule</mat-icon>
+          <div class="stat-info">
+            <h3>{{ contarPorEstado('Pendiente') }}</h3>
+            <p>Pendientes</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card aprobado">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icono">check_circle</mat-icon>
+          <div class="stat-info">
+            <h3>{{ contarPorEstado('Aprobado') }}</h3>
+            <p>Aprobados</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card rechazado">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icono">cancel</mat-icon>
+          <div class="stat-info">
+            <h3>{{ contarPorEstado('Rechazado') }}</h3>
+            <p>Rechazados</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por estado</mat-label>
+        <mat-select [(ngModel)]="filtroEstado" (selectionChange)="aplicarFiltros()">
+          <mat-option value="todos">Todos ({{ depositos.length }})</mat-option>
+          <mat-option value="Pendiente">Pendientes ({{ contarPorEstado('Pendiente') }})</mat-option>
+          <mat-option value="Aprobado">Aprobados ({{ contarPorEstado('Aprobado') }})</mat-option>
+          <mat-option value="Rechazado">Rechazados ({{ contarPorEstado('Rechazado') }})</mat-option>
+        </mat-select>
+        <mat-icon matPrefix>filter_list</mat-icon>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando depósitos...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarDepositos()">
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de Depósitos -->
+  <mat-card *ngIf="!cargando && !error" class="tabla-card">
+    <div class="tabla-container">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Ubicación</th>
+          <th>Tipo de Residuo</th>
+          <th>Cantidad</th>
+          <th>Fecha Envío</th>
+          <th>Estado</th>
+          <th>Puntos</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let deposito of depositosFiltrados">
+          <td>{{ deposito.id }}</td>
+          <td>
+            <div class="usuario-cell">
+              <mat-icon>person</mat-icon>
+              <strong>{{ obtenerNombreUsuario(deposito) }}</strong>
+            </div>
+          </td>
+          <td class="ubicacion-cell">{{ deposito.ubicacion }}</td>
+          <td>
+            <mat-chip>
+              <mat-icon matChipAvatar>{{ obtenerInfoResiduo(deposito.tiporesiduo).icono }}</mat-icon>
+              {{ obtenerInfoResiduo(deposito.tiporesiduo).nombre }}
+            </mat-chip>
+          </td>
+          <td><strong>{{ deposito.cantidad }} KG</strong></td>
+          <td>{{ formatearFecha(deposito.fechaenvio) }}</td>
+          <td>
+            <mat-chip [color]="obtenerColorEstado(deposito.estado)" highlighted>
+              <mat-icon>{{ obtenerIconoEstado(deposito.estado) }}</mat-icon>
+              {{ deposito.estado }}
+            </mat-chip>
+          </td>
+          <td>
+              <span *ngIf="deposito.estado === 'Aprobado'" class="puntos-otorgados">
+                <mat-icon>stars</mat-icon>
+                {{ deposito.puntosotorgados }} pts
+              </span>
+            <span *ngIf="deposito.estado === 'Pendiente'" class="puntos-estimados">
+                ~{{ calcularPuntosEstimados(deposito) }} pts
+              </span>
+            <span *ngIf="deposito.estado === 'Rechazado'">-</span>
+          </td>
+          <td>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="verDetalle(deposito)"
+              matTooltip="Ver detalle">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="depositosFiltrados.length === 0" class="sin-depositos">
+        <mat-icon class="icon-vacio">inventory_2</mat-icon>
+        <p>No hay depósitos {{ filtroEstado === 'todos' ? '' : 'en estado ' + filtroEstado }}</p>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Modal de Detalle -->
+<div class="modal-overlay" *ngIf="modalDetalle" (click)="cerrarModal()">
+  <mat-card class="modal-content modal-grande" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>description</mat-icon>
+        Detalle del Depósito #{{ depositoSeleccionado?.id }}
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModal()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="deposito-detalle" *ngIf="depositoSeleccionado">
+
+        <!-- Estado actual -->
+        <div class="detalle-estado">
+          <mat-chip [color]="obtenerColorEstado(depositoSeleccionado.estado)" highlighted class="estado-badge-grande">
+            <mat-icon>{{ obtenerIconoEstado(depositoSeleccionado.estado) }}</mat-icon>
+            {{ depositoSeleccionado.estado }}
+          </mat-chip>
+        </div>
+
+        <!-- Información del usuario -->
+        <div class="detalle-seccion">
+          <h3>
+            <mat-icon>person</mat-icon>
+            Información del Usuario
+          </h3>
+          <div class="detalle-grid">
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>person</mat-icon>
+                  Usuario
+                </span>
+                <span class="valor">{{ obtenerNombreUsuario(depositoSeleccionado) }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>email</mat-icon>
+                  Correo
+                </span>
+                <span class="valor">{{ depositoSeleccionado.usuario?.email || 'No disponible' }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>tag</mat-icon>
+                  ID Usuario
+                </span>
+                <span class="valor">{{ depositoSeleccionado.idUsuario }}</span>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>calendar_today</mat-icon>
+                  Fecha de envío
+                </span>
+                <span class="valor">{{ formatearFecha(depositoSeleccionado.fechaenvio) }}</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Información del depósito -->
+        <div class="detalle-seccion">
+          <h3>
+            <mat-icon>recycling</mat-icon>
+            Información del Depósito
+          </h3>
+
+          <mat-card class="info-card">
+            <mat-card-content>
+              <div class="info-item">
+                <span class="label">
+                  <mat-icon>location_on</mat-icon>
+                  Ubicación reportada
+                </span>
+                <span class="valor">{{ depositoSeleccionado.ubicacion }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="info-card">
+            <mat-card-content>
+              <div class="info-item">
+                <span class="label">
+                  <mat-icon>notes</mat-icon>
+                  Descripción
+                </span>
+                <p class="valor descripcion-texto">{{ depositoSeleccionado.descripcion }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="detalle-grid">
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>category</mat-icon>
+                  Tipo de residuo
+                </span>
+                <mat-chip class="tipo-badge">
+                  <mat-icon matChipAvatar>{{ obtenerInfoResiduo(depositoSeleccionado.tiporesiduo).icono }}</mat-icon>
+                  {{ obtenerInfoResiduo(depositoSeleccionado.tiporesiduo).nombre }}
+                </mat-chip>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="detalle-item">
+              <mat-card-content>
+                <span class="label">
+                  <mat-icon>scale</mat-icon>
+                  Cantidad
+                </span>
+                <span class="valor cantidad-destacada">{{ depositoSeleccionado.cantidad }} KG</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <mat-card class="info-card">
+            <mat-card-content>
+              <div class="info-item">
+                <span class="label">
+                  <mat-icon>place</mat-icon>
+                  Ubicación del depósito de reciclaje
+                </span>
+                <span class="valor">{{ depositoSeleccionado.ubicaciondeposito }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Galería de Pruebas Fotográficas -->
+        <div class="detalle-seccion" *ngIf="depositoSeleccionado.pruebas && obtenerImagenes(depositoSeleccionado.pruebas).length > 0">
+          <h3>
+            <mat-icon>collections</mat-icon>
+            Pruebas Fotográficas ({{ obtenerImagenes(depositoSeleccionado.pruebas).length }})
+          </h3>
+          <div class="galeria-imagenes">
+            <div
+              class="galeria-item"
+              *ngFor="let imagen of obtenerImagenes(depositoSeleccionado.pruebas); let i = index"
+              (click)="verImagen(imagen)">
+              <img [src]="imagen" [alt]="'Prueba fotográfica ' + (i + 1)">
+              <div class="galeria-overlay">
+                <mat-icon>zoom_in</mat-icon>
+                <span class="galeria-numero">{{ i + 1 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje si no hay pruebas -->
+        <div class="detalle-seccion" *ngIf="!depositoSeleccionado.pruebas || obtenerImagenes(depositoSeleccionado.pruebas).length === 0">
+          <h3>
+            <mat-icon>collections</mat-icon>
+            Pruebas Fotográficas
+          </h3>
+          <mat-card class="sin-pruebas-card">
+            <mat-card-content>
+              <mat-icon class="icono-sin-pruebas">image_not_supported</mat-icon>
+              <p>No se adjuntaron pruebas fotográficas</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Cálculo de puntos -->
+        <div class="detalle-seccion">
+          <h3>
+            <mat-icon>calculate</mat-icon>
+            Cálculo de Eco-Puntos
+          </h3>
+          <mat-card class="calculo-card">
+            <mat-card-content>
+              <div class="calculo-detalle">
+                <div class="calculo-item">
+                  <span>
+                    <mat-icon>timeline</mat-icon>
+                    Base por KG
+                  </span>
+                  <span>{{ obtenerInfoResiduo(depositoSeleccionado.tiporesiduo).puntosPorKg }} pts/KG</span>
+                </div>
+                <div class="calculo-item">
+                  <span>
+                    <mat-icon>scale</mat-icon>
+                    Cantidad
+                  </span>
+                  <span>{{ depositoSeleccionado.cantidad }} KG</span>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="calculo-item total">
+                  <span>
+                    <mat-icon>calculate</mat-icon>
+                    Total base
+                  </span>
+                  <span>{{ calcularPuntosEstimados(depositoSeleccionado) }} pts</span>
+                </div>
+                <mat-card class="calculo-nota">
+                  <mat-card-content>
+                    <mat-icon>info</mat-icon>
+                    <small>Los puntos finales se multiplican según el plan de suscripción del usuario (×1, ×2 o ×3)</small>
+                  </mat-card-content>
+                </mat-card>
+                <div class="calculo-item final" *ngIf="depositoSeleccionado.estado === 'Aprobado'">
+                  <span>
+                    <mat-icon>stars</mat-icon>
+                    Puntos otorgados
+                  </span>
+                  <span class="puntos-final">{{ depositoSeleccionado.puntosotorgados }} pts</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <!-- Acciones de validación -->
+      <div class="modal-acciones" *ngIf="depositoSeleccionado?.estado === 'Pendiente'">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="validarDeposito(true)"
+          [disabled]="procesando">
+          <mat-icon>{{ procesando ? 'hourglass_empty' : 'check_circle' }}</mat-icon>
+          {{ procesando ? 'Procesando...' : 'Aprobar Depósito' }}
+        </button>
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="validarDeposito(false)"
+          [disabled]="procesando">
+          <mat-icon>{{ procesando ? 'hourglass_empty' : 'cancel' }}</mat-icon>
+          {{ procesando ? 'Procesando...' : 'Rechazar Depósito' }}
+        </button>
+      </div>
+
+      <!-- Estado final -->
+      <mat-card class="estado-final" *ngIf="depositoSeleccionado?.estado !== 'Pendiente'">
+        <mat-card-content>
+          <p *ngIf="depositoSeleccionado?.estado === 'Aprobado'" class="mensaje-aprobado">
+            <mat-icon>check_circle</mat-icon>
+            Este depósito ya fue aprobado
+          </p>
+          <p *ngIf="depositoSeleccionado?.estado === 'Rechazado'" class="mensaje-rechazado">
+            <mat-icon>cancel</mat-icon>
+            Este depósito fue rechazado
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- Modal de Imagen Completa -->
+<div class="modal-overlay modal-imagen-overlay" *ngIf="modalImagen" (click)="cerrarModalImagen()">
+  <div class="modal-imagen-content" (click)="$event.stopPropagation()">
+    <button mat-icon-button (click)="cerrarModalImagen()" class="btn-cerrar-imagen">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img [src]="imagenSeleccionada" alt="Imagen completa">
+  </div>
+</div>

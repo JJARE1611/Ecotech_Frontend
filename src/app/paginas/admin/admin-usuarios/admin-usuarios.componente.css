@@ -1,0 +1,539 @@
+.admin-usuarios-container {
+  min-height: 100vh;
+  padding: 120px 60px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.admin-header {
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* Estadísticas */
+.estadisticas-usuarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.stat-card.total {
+  border-left: 4px solid #2196F3;
+}
+
+.stat-card.filtrados {
+  border-left: 4px solid #4CAF50;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.stat-icono {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #1a4d2e;
+}
+
+.stat-card.total .stat-icono {
+  color: #2196F3;
+}
+
+.stat-card.filtrados .stat-icono {
+  color: #4CAF50;
+}
+
+.stat-info h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  color: #1a1a1a;
+}
+
+.stat-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Filtros y Búsqueda */
+.filtros-card {
+  margin-bottom: 30px;
+}
+
+.busqueda-field {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* Fix para z-index de overlays de Material */
+::ng-deep .cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+::ng-deep .mat-mdc-select-panel {
+  z-index: 9999 !important;
+}
+
+/* Loading */
+.loading-container {
+  text-align: center;
+  padding: 60px;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Error */
+.error-card {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 30px;
+}
+
+.error-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+/* Tabla */
+.tabla-card {
+  overflow: hidden;
+}
+
+.tabla-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #1a4d2e;
+  color: white;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.2s;
+}
+
+tbody tr:hover {
+  background: #f9f9f9;
+}
+
+td {
+  padding: 16px;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+td strong {
+  font-size: 15px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.email-text {
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.direccion-cell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.sin-usuarios {
+  text-align: center;
+  padding: 60px 30px;
+}
+
+.icon-vacio {
+  font-size: 80px !important;
+  width: 80px !important;
+  height: 80px !important;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.sin-usuarios p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s;
+}
+
+.modal-grande {
+  max-width: 900px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px !important;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-content mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px !important;
+  margin: 0 !important;
+}
+
+.btn-cerrar {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+}
+
+.modal-content mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+/* Detalle de Usuario */
+.usuario-detalle {
+  padding: 20px 0;
+}
+
+.detalle-seccion {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.detalle-seccion:last-child {
+  border-bottom: none;
+}
+
+.detalle-seccion h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  color: #1a4d2e;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+}
+
+.detalle-seccion h3 mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.detalle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.detalle-item {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.detalle-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.detalle-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.detalle-item mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px !important;
+}
+
+.detalle-item .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.detalle-item .label mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #1a4d2e;
+}
+
+.detalle-item .valor {
+  font-size: 15px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Eco-Puntos Display */
+.puntos-display {
+  display: flex;
+  justify-content: center;
+}
+
+.puntos-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+}
+
+.puntos-card mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 30px 50px !important;
+}
+
+.puntos-icono {
+  font-size: 60px !important;
+  width: 60px !important;
+  height: 60px !important;
+  color: white;
+}
+
+.puntos-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.puntos-valor {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.puntos-label {
+  font-size: 14px;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+/* Formulario de Edición */
+.modal-content form {
+  padding-top: 20px;
+}
+
+.modal-content mat-form-field {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-row mat-form-field {
+  width: 100%;
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.form-error mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.modal-content mat-card-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  margin: 0 !important;
+}
+
+/* Snackbar personalizado */
+::ng-deep .snackbar-success {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .admin-usuarios-container {
+    padding: 100px 20px 20px;
+  }
+
+  .admin-header h1 {
+    font-size: 28px;
+  }
+
+  .estadisticas-usuarios {
+    grid-template-columns: 1fr;
+  }
+
+  .tabla-container {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 900px;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+
+  .modal-grande {
+    width: 95%;
+  }
+
+  .detalle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .puntos-card mat-card-content {
+    padding: 20px 30px !important;
+  }
+
+  .puntos-valor {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .puntos-card mat-card-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .puntos-icono {
+    font-size: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+}

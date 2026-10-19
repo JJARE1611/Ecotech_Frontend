@@ -1,0 +1,364 @@
+<div class="reportes-container">
+  <!-- HEADER -->
+  <div class="header">
+    <h1>
+      <mat-icon class="header-icon">assessment</mat-icon>
+      Reportes y Estadísticas
+    </h1>
+    <p class="subtitle">Análisis completo del sistema EcoPuntos</p>
+  </div>
+
+  <!-- FILTROS -->
+  <mat-card class="filtros-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>calendar_month</mat-icon>
+        Filtros de Período
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="filtros-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicio</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerInicio"
+            [formControl]="fechaInicioControl"
+            placeholder="Seleccione fecha">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Fin</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerFin"
+            [formControl]="fechaFinControl"
+            placeholder="Seleccione fecha">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+        </mat-form-field>
+
+        <div class="filtros-buttons">
+          <button mat-raised-button color="primary" (click)="aplicarFiltros()">
+            <mat-icon>search</mat-icon>
+            Aplicar Filtros
+          </button>
+          <button mat-stroked-button (click)="limpiarFiltros()">
+            <mat-icon>refresh</mat-icon>
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- LOADER -->
+  <div *ngIf="cargando" class="loader-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando reportes...</p>
+  </div>
+
+  <!-- ERROR -->
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- CONTENIDO -->
+  <div *ngIf="!cargando && !error">
+
+    <!-- ESTADÍSTICAS GENERALES -->
+    <div class="section-title">
+      <mat-icon>trending_up</mat-icon>
+      <h2>Estadísticas Generales</h2>
+    </div>
+
+    <div class="stats-grid" *ngIf="estadisticasGenerales">
+      <mat-card class="stat-card usuarios">
+        <mat-card-content>
+          <mat-icon class="stat-icon">group</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.totalUsuarios) }}</h3>
+            <p>Total Usuarios</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card eventos">
+        <mat-card-content>
+          <mat-icon class="stat-icon">event</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.totalEventos) }}</h3>
+            <p>Total Eventos</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card depositos">
+        <mat-card-content>
+          <mat-icon class="stat-icon">recycling</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.totalDepositos) }}</h3>
+            <p>Total Depósitos</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card productos">
+        <mat-card-content>
+          <mat-icon class="stat-icon">redeem</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.totalProductos) }}</h3>
+            <p>Total Productos</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card puntos-otorgados">
+        <mat-card-content>
+          <mat-icon class="stat-icon">stars</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.puntosOtorgadosTotal) }}</h3>
+            <p>Puntos Otorgados</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card puntos-canjeados">
+        <mat-card-content>
+          <mat-icon class="stat-icon">sell</mat-icon>
+          <div class="stat-content">
+            <h3>{{ formatearNumero(estadisticasGenerales.puntosCanjeadosTotal) }}</h3>
+            <p>Puntos Canjeados</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- DEPÓSITOS POR TIPO -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>recycling</mat-icon>
+          Depósitos por Tipo de Residuo
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="depositosPorTipo.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No hay datos de depósitos en el período seleccionado</p>
+        </div>
+
+        <div *ngIf="depositosPorTipo.length > 0">
+          <div class="totales-depositos">
+            <mat-chip-set>
+              <mat-chip>
+                <strong>Total Depósitos:</strong> {{ formatearNumero(calcularTotalDepositos()) }}
+              </mat-chip>
+              <mat-chip>
+                <strong>Peso Total:</strong> {{ formatearNumero(calcularTotalPeso()) }} kg
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="tipo-residuo-grid">
+            <mat-card *ngFor="let deposito of depositosPorTipo"
+                      class="tipo-residuo-card"
+                      [style.border-left-color]="obtenerColorTipo(deposito.tipo)">
+              <mat-card-header>
+                <mat-icon [style.color]="obtenerColorTipo(deposito.tipo)">
+                  {{ obtenerIconoTipo(deposito.tipo) }}
+                </mat-icon>
+                <mat-card-title>{{ deposito.tipo }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="tipo-stats">
+                  <div class="stat-row">
+                    <span class="label">
+                      <mat-icon>inventory_2</mat-icon>
+                      Cantidad:
+                    </span>
+                    <span class="value">{{ formatearNumero(deposito.cantidad) }}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">
+                      <mat-icon>scale</mat-icon>
+                      Peso:
+                    </span>
+                    <span class="value">{{ formatearNumero(deposito.peso) }} kg</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">
+                      <mat-icon>stars</mat-icon>
+                      Puntos:
+                    </span>
+                    <span class="value highlight">{{ formatearNumero(deposito.puntos) }}</span>
+                  </div>
+                </div>
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="calcularPorcentaje(deposito.cantidad, calcularTotalDepositos())"
+                  [color]="'primary'">
+                </mat-progress-bar>
+                <small class="porcentaje">
+                  {{ calcularPorcentaje(deposito.cantidad, calcularTotalDepositos()).toFixed(1) }}% del total
+                </small>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- EVENTOS MÁS PARTICIPADOS -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>emoji_events</mat-icon>
+          Eventos Más Participados
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="eventosMasParticipados.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No hay eventos registrados</p>
+        </div>
+
+        <div *ngIf="eventosMasParticipados.length > 0" class="eventos-list">
+          <mat-card *ngFor="let evento of eventosMasParticipados; let i = index" class="evento-item">
+            <div class="ranking-badge">{{ i + 1 }}</div>
+            <mat-card-content class="evento-content">
+              <div class="evento-info">
+                <h3>{{ evento.nombre }}</h3>
+                <p class="fecha">
+                  <mat-icon>calendar_today</mat-icon>
+                  {{ formatearFecha(evento.fecha) }}
+                </p>
+              </div>
+              <div class="evento-stats">
+                <div class="participantes">
+                  <mat-icon>group</mat-icon>
+                  <strong>{{ formatearNumero(evento.participantes) }}</strong>
+                  <small>participantes</small>
+                </div>
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="calcularPorcentaje(evento.participantes, obtenerMaximoParticipantes())"
+                  color="accent">
+                </mat-progress-bar>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- USUARIOS TOP -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>leaderboard</mat-icon>
+          Top 10 Usuarios con Más Puntos
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="usuariosTop.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No hay usuarios con puntos registrados</p>
+        </div>
+
+        <table mat-table [dataSource]="usuariosTop" *ngIf="usuariosTop.length > 0" class="usuarios-table">
+          <!-- Ranking Column -->
+          <ng-container matColumnDef="ranking">
+            <th mat-header-cell *matHeaderCellDef>Ranking</th>
+            <td mat-cell *matCellDef="let usuario; let i = index">
+              <div class="ranking-number" [class.top-3]="i < 3">
+                {{ i + 1 }} {{ obtenerMedallaRanking(i) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Nombre Column -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let usuario">
+              <strong>{{ usuario.nombre }} {{ usuario.apellidos }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.email }}</td>
+          </ng-container>
+
+          <!-- Puntos Column -->
+          <ng-container matColumnDef="puntos">
+            <th mat-header-cell *matHeaderCellDef>Puntos</th>
+            <td mat-cell *matCellDef="let usuario">
+              <mat-chip color="accent" highlighted>
+                <mat-icon matChipAvatar>stars</mat-icon>
+                {{ formatearNumero(usuario.puntos) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Progreso Column -->
+          <ng-container matColumnDef="progreso">
+            <th mat-header-cell *matHeaderCellDef>Progreso</th>
+            <td mat-cell *matCellDef="let usuario">
+              <mat-progress-bar
+                mode="determinate"
+                [value]="calcularPorcentaje(usuario.puntos, obtenerMaximoPuntos())"
+                color="primary">
+              </mat-progress-bar>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- DEPÓSITOS POR MES -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>show_chart</mat-icon>
+          Tendencia de Depósitos por Mes
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="depositosPorMes.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No hay datos de depósitos por mes en el período seleccionado</p>
+        </div>
+
+        <div *ngIf="depositosPorMes.length > 0" class="chart-mes">
+          <div *ngFor="let mes of depositosPorMes" class="mes-bar">
+            <div class="bar-container">
+              <div
+                class="bar"
+                [style.height.%]="calcularPorcentaje(mes.cantidad, obtenerMaximaCantidadMes())"
+                matTooltip="{{mes.cantidad}} depósitos - {{mes.peso}} kg">
+                <span class="bar-value">{{ mes.cantidad }}</span>
+              </div>
+            </div>
+            <div class="bar-label">
+              <strong>{{ formatearMes(mes.mes) }}</strong>
+              <small>{{ formatearNumero(mes.peso) }} kg</small>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

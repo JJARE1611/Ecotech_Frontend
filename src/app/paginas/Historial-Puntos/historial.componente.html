@@ -1,0 +1,172 @@
+<div class="historial-container">
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-overlay">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando historial...</p>
+  </div>
+
+  <mat-card *ngIf="error && !cargando" class="error-card">
+    <mat-card-content>
+      <mat-icon color="warn" class="error-icon">error</mat-icon>
+      <h2>Error</h2>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="cargarHistorial()">
+        <mat-icon>refresh</mat-icon>
+        Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="!cargando && !error" class="historial-content">
+
+    <div class="historial-header">
+      <h1>Historial de Eco-Puntos</h1>
+      <p class="subtitle">Seguimiento completo de tus puntos</p>
+    </div>
+
+    <div class="resumen-puntos">
+      <mat-card class="resumen-card disponibles">
+        <mat-card-content>
+          <div class="resumen-icono">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </div>
+          <div class="resumen-info">
+            <span class="resumen-label">Puntos Disponibles</span>
+            <span class="resumen-valor">{{ puntosDisponibles }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="resumen-card obtenidos">
+        <mat-card-content>
+          <div class="resumen-icono">
+            <mat-icon>arrow_upward</mat-icon>
+          </div>
+          <div class="resumen-info">
+            <span class="resumen-label">Total Obtenidos</span>
+            <span class="resumen-valor">{{ totalObtenidos }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="resumen-card canjeados">
+        <mat-card-content>
+          <div class="resumen-icono">
+            <mat-icon>arrow_downward</mat-icon>
+          </div>
+          <div class="resumen-info">
+            <span class="resumen-label">Total Canjeados</span>
+            <span class="resumen-valor">{{ totalCanjeados }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="filtros-card">
+      <mat-card-content>
+        <div class="filtros-wrapper">
+          <mat-form-field appearance="outline" class="filtro-field">
+            <mat-label>Tipo de movimiento</mat-label>
+            <mat-select [(ngModel)]="filtroTipo" (selectionChange)="aplicarFiltros()">
+              <mat-option value="todos">Todos</mat-option>
+              <mat-option value="Deposito">Depósitos</mat-option>
+              <mat-option value="Evento">Eventos</mat-option>
+              <mat-option value="Canje">Canjes</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>filter_list</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filtro-field">
+            <mat-label>Fecha inicio</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerInicio"
+              [(ngModel)]="fechaInicio"
+              (dateChange)="aplicarFiltros()">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicio></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filtro-field">
+            <mat-label>Fecha fin</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerFin"
+              [(ngModel)]="fechaFin"
+              (dateChange)="aplicarFiltros()">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+
+          <div class="filtro-acciones">
+            <button mat-raised-button color="primary" (click)="aplicarFiltros()">
+              <mat-icon>check</mat-icon>
+              Aplicar
+            </button>
+            <button mat-stroked-button (click)="limpiarFiltros()">
+              <mat-icon>clear</mat-icon>
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <button mat-raised-button class="btn-exportar" (click)="exportarCSV()">
+          <mat-icon>download</mat-icon>
+          Exportar CSV
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+
+    <div class="historial-lista">
+      <mat-card
+        *ngFor="let item of historialFiltrado"
+        class="historial-item"
+        [ngClass]="obtenerColorTipo(item.tipomovimiento)">
+
+        <mat-card-content>
+          <div class="item-icono">
+            <mat-icon [color]="obtenerColorChip(item.tipomovimiento)">
+              {{ obtenerIconoTipo(item.tipomovimiento) }}
+            </mat-icon>
+          </div>
+
+          <div class="item-contenido">
+            <div class="item-header">
+              <mat-chip [color]="obtenerColorChip(item.tipomovimiento)" highlighted>
+                {{ item.tipomovimiento }}
+              </mat-chip>
+              <span class="item-fecha">
+                <mat-icon inline>schedule</mat-icon>
+                {{ formatearFecha(item.fecha) }}
+              </span>
+            </div>
+            <p class="item-descripcion">{{ item.descripcion }}</p>
+          </div>
+
+          <div class="item-puntos">
+            <mat-chip *ngIf="item.puntosobtenidos > 0" class="puntos-obtenidos" color="primary">
+              <mat-icon matChipAvatar>add_circle</mat-icon>
+              <span class="puntos-label">Obtenidos: </span>
+              <span class="puntos-valor">+{{ item.puntosobtenidos }}</span>
+            </mat-chip>
+            <mat-chip *ngIf="item.puntoscanjeados > 0" class="puntos-canjeados" color="warn">
+              <mat-icon matChipAvatar>remove_circle</mat-icon>
+              <span class="puntos-label">Canjeados: </span>
+              <span class="puntos-valor">-{{ item.puntoscanjeados }}</span>
+            </mat-chip>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Sin resultados -->
+      <mat-card *ngIf="historialFiltrado.length === 0" class="sin-historial">
+        <mat-card-content>
+          <mat-icon class="sin-historial-icon">assignment</mat-icon>
+          <h3>No hay movimientos</h3>
+          <p>No se encontraron movimientos con los filtros seleccionados</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

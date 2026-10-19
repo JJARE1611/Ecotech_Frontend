@@ -1,0 +1,449 @@
+.historial-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 120px 30px 60px;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-overlay p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+
+.error-card {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.error-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 60px 40px !important;
+}
+
+.error-icon {
+  font-size: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.error-card h2 {
+  font-size: 32px;
+  margin: 0;
+  color: #c33;
+}
+
+.error-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+/* ========== HEADER ========== */
+.historial-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.historial-header h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+}
+
+/* ========== RESUMEN DE PUNTOS ========== */
+.resumen-puntos {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.resumen-card {
+  transition: transform 0.3s;
+  overflow: visible !important;
+}
+
+.resumen-card:hover {
+  transform: translateY(-5px);
+}
+
+.resumen-card mat-card-content {
+  padding: 30px !important;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.resumen-card.disponibles {
+  border-left: 5px solid #4CAF50;
+}
+
+.resumen-card.obtenidos {
+  border-left: 5px solid #2196F3;
+}
+
+.resumen-card.canjeados {
+  border-left: 5px solid #FF9800;
+}
+
+.resumen-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resumen-icono mat-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #1a4d2e;
+}
+
+.resumen-card.disponibles .resumen-icono mat-icon {
+  color: #4CAF50;
+}
+
+.resumen-card.obtenidos .resumen-icono mat-icon {
+  color: #2196F3;
+}
+
+.resumen-card.canjeados .resumen-icono mat-icon {
+  color: #FF9800;
+}
+
+.resumen-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.resumen-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.resumen-valor {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ========== FILTROS ========== */
+.filtros-card {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.filtros-card mat-card-content {
+  padding: 25px !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filtros-wrapper {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filtro-field {
+  min-width: 180px;
+  flex: 1;
+}
+
+.filtro-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-exportar {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+.btn-exportar:hover {
+  background: #45a049 !important;
+}
+
+/* ========== LISTA DE HISTORIAL ========== */
+.historial-lista {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.historial-item {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-left: 5px solid #e0e0e0;
+  overflow: visible !important;
+  padding: 0 !important;
+}
+
+.historial-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.historial-item.deposito {
+  border-left-color: #4CAF50;
+}
+
+.historial-item.evento {
+  border-left-color: #2196F3;
+}
+
+.historial-item.canje {
+  border-left-color: #FF9800;
+}
+
+.historial-item mat-card-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  padding: 20px !important;
+  width: 100% !important;
+}
+
+.item-icono {
+  flex-shrink: 0;
+}
+
+.item-icono mat-icon {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.item-contenido {
+  flex: 1;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.item-fecha {
+  font-size: 13px;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.item-fecha mat-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.item-descripcion {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.item-puntos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+.puntos-obtenidos,
+.puntos-canjeados {
+  min-width: 160px !important;
+  height: auto !important;
+  padding: 8px 15px !important;
+}
+
+.puntos-obtenidos {
+  background: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.puntos-canjeados {
+  background: #fff3e0 !important;
+  color: #e65100 !important;
+}
+
+.puntos-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.puntos-valor {
+  font-size: 18px;
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+/* ========== SIN HISTORIAL ========== */
+.sin-historial {
+  text-align: center;
+}
+
+.sin-historial mat-card-content {
+  padding: 80px 20px !important;
+}
+
+.sin-historial-icon {
+  font-size: 80px !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin-bottom: 20px;
+  color: #ccc;
+}
+
+.sin-historial h3 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.sin-historial p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* Fix para z-index de overlays de Material */
+::ng-deep .cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+::ng-deep .mat-mdc-select-panel {
+  z-index: 9999 !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 968px) {
+  .historial-container {
+    padding: 100px 20px 40px;
+  }
+
+  .historial-header h1 {
+    font-size: 28px;
+  }
+
+  .resumen-puntos {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros-card mat-card-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtros-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-field {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .filtro-acciones {
+    width: 100%;
+  }
+
+  .filtro-acciones button {
+    flex: 1;
+  }
+
+  .btn-exportar {
+    width: 100%;
+  }
+
+  .historial-item mat-card-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .item-contenido {
+    width: 100%;
+  }
+
+  .item-puntos {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 100%;
+  }
+
+  .puntos-obtenidos,
+  .puntos-canjeados {
+    flex: 1;
+    min-width: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .resumen-valor {
+    font-size: 24px;
+  }
+
+  .item-puntos {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .puntos-obtenidos,
+  .puntos-canjeados {
+    width: 100%;
+  }
+}

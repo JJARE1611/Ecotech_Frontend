@@ -1,0 +1,424 @@
+<div class="suscripcion-container">
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando información...</p>
+  </div>
+
+  <div *ngIf="!cargando" class="suscripcion-content">
+
+    <div class="suscripcion-header">
+      <h1>Planes de Suscripción</h1>
+      <p class="subtitle">Potencia tus Eco-Puntos con nuestros planes</p>
+    </div>
+
+    <mat-card *ngIf="suscripcionActual && suscripcionActual.tipoplan !== 'Basico'" class="suscripcion-actual-card">
+      <mat-card-header class="actual-header">
+        <mat-card-title>
+          <mat-icon>{{ obtenerIconoPlan(suscripcionActual.tipoplan) }}</mat-icon>
+          Tu Plan Actual
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="actual-content">
+          <div class="actual-plan">
+            <h2 class="plan-nombre">{{ suscripcionActual.tipoplan }}</h2>
+            <mat-chip [color]="obtenerEstadoColor(suscripcionActual.estado)" highlighted>
+              {{ suscripcionActual.estado }}
+            </mat-chip>
+          </div>
+
+          <mat-divider [vertical]="true" class="divider-vertical"></mat-divider>
+
+          <div class="actual-info">
+            <div class="info-item">
+              <mat-icon>verified</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Multiplicador</span>
+                <span class="info-valor">x{{
+                    suscripcionActual.tipoplan === 'VIP' ? 3 :
+                      suscripcionActual.tipoplan === 'Premium' ? 2 : 1
+                  }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>event</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Fecha inicio</span>
+                <span class="info-valor">{{ formatearFecha(suscripcionActual.fechainicio) }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>event_available</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Fecha fin</span>
+                <span class="info-valor">{{ formatearFecha(suscripcionActual.fechafin) }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>schedule</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Días restantes</span>
+                <span class="info-valor dias-restantes">{{ calcularDiasRestantes() }} días</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="tienePlanProgramado()" class="plan-programado-section">
+          <mat-divider></mat-divider>
+
+          <div class="plan-programado-content">
+            <div class="programado-header">
+              <mat-icon color="accent">schedule</mat-icon>
+              <div class="programado-info">
+                <strong>Cambio Programado</strong>
+                <div class="programado-detalles">
+                  <mat-chip>{{ suscripcionActual.tipoplan }}</mat-chip>
+                  <mat-icon>arrow_forward</mat-icon>
+                  <mat-chip color="accent" highlighted>{{ suscripcionActual.proximoPlan }}</mat-chip>
+                </div>
+                <span class="fecha-cambio">
+                  Se aplicará el {{ formatearFecha(suscripcionActual.fechafin) }}
+                </span>
+              </div>
+            </div>
+
+            <mat-card class="mensaje-cambio" *ngIf="suscripcionActual.proximoPlan === 'Basico'" color="warn">
+              <mat-card-content>
+                <mat-icon>warning</mat-icon>
+                <p>Tu suscripción está cancelada. Volverás al plan Básico gratuito cuando termine tu periodo actual.</p>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mensaje-cambio" *ngIf="suscripcionActual.proximoPlan !== 'Basico'">
+              <mat-card-content>
+                <mat-icon color="primary">info</mat-icon>
+                <p>Has programado un cambio a {{ suscripcionActual.proximoPlan }}. Se aplicará automáticamente cuando termine tu periodo de {{ suscripcionActual.tipoplan }}.</p>
+              </mat-card-content>
+            </mat-card>
+
+            <div class="plan-programado-acciones">
+              <ng-container *ngIf="suscripcionActual.proximoPlan !== 'Basico'">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="cancelarCambioProgramado()"
+                  [disabled]="procesando"
+                  matTooltip="Cancelar el cambio y mantener tu plan actual">
+                  <mat-icon>undo</mat-icon>
+                  Mantener {{ suscripcionActual.tipoplan }}
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  (click)="cancelarCompletamente()"
+                  [disabled]="procesando"
+                  matTooltip="Cancelar completamente y volver a plan Básico">
+                  <mat-icon>cancel</mat-icon>
+                  Cancelar a Básico
+                </button>
+              </ng-container>
+
+              <button
+                *ngIf="suscripcionActual.proximoPlan === 'Basico'"
+                mat-raised-button
+                color="accent"
+                (click)="reactivarSuscripcion()"
+                [disabled]="procesando"
+                matTooltip="Cancelar la cancelación y mantener tu plan actual">
+                <mat-icon>refresh</mat-icon>
+                Reactivar Suscripción
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions *ngIf="!tienePlanProgramado() &&
+                                 suscripcionActual.estado === 'Activa' &&
+                                 suscripcionActual.tipoplan !== 'Basico'">
+        <button
+          mat-button
+          color="warn"
+          (click)="cancelarCompletamente()"
+          [disabled]="procesando">
+          <mat-icon>delete</mat-icon>
+          Cancelar Suscripción
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div class="planes-section">
+      <h2 class="planes-titulo">Elige tu Plan</h2>
+
+      <div class="planes-grid">
+        <mat-card *ngFor="let plan of planes"
+                  class="plan-card"
+                  [class.plan-actual]="esPlanActual(plan.nombre)"
+                  [class.plan-destacado]="plan.nombre === 'Premium'">
+
+          <mat-chip-set *ngIf="esPlanActual(plan.nombre)" class="badge-actual">
+            <mat-chip color="primary" highlighted>
+              <mat-icon>check_circle</mat-icon>
+              Plan Actual
+            </mat-chip>
+          </mat-chip-set>
+
+
+          <mat-chip-set *ngIf="plan.nombre === 'Premium'" class="badge-recomendado">
+            <mat-chip color="accent" highlighted>
+              <mat-icon>star</mat-icon>
+              Recomendado
+            </mat-chip>
+          </mat-chip-set>
+
+          <div class="plan-header" [style.background]="plan.color">
+            <mat-icon class="plan-icon">{{ plan.icono }}</mat-icon>
+            <h3 class="plan-nombre">{{ plan.nombre }}</h3>
+            <div class="plan-precio">
+              <span class="precio-valor" *ngIf="plan.precio > 0">S/ {{ plan.precio }}</span>
+              <span class="precio-valor" *ngIf="plan.precio === 0">Gratis</span>
+              <span class="precio-duracion">/ {{ plan.duracion }}</span>
+            </div>
+            <mat-chip class="multiplicador-chip" highlighted>
+              <mat-icon matChipAvatar>bolt</mat-icon>
+              x{{ plan.multiplicador }} puntos
+            </mat-chip>
+          </div>
+
+          <mat-card-content>
+            <div class="plan-beneficios">
+              <h4>Beneficios incluidos:</h4>
+              <mat-list>
+                <mat-list-item *ngFor="let beneficio of plan.beneficios">
+                  <mat-icon matListItemIcon>check_circle</mat-icon>
+                  <span matListItemTitle>{{ beneficio }}</span>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <div *ngIf="plan.nombre === 'Basico'" class="plan-gratuito">
+              <span *ngIf="!suscripcionActual || esPlanActual('Basico')">
+                Plan Actual Gratuito
+              </span>
+              <button
+                *ngIf="suscripcionActual && !esPlanActual('Basico')"
+                mat-stroked-button
+                (click)="abrirModalSuscripcion(plan, 'cambiar')"
+                [disabled]="procesando">
+                Volver al Plan Básico
+              </button>
+            </div>
+
+            <div *ngIf="plan.nombre !== 'Basico'">
+              <button
+                *ngIf="esPlanActual(plan.nombre)"
+                mat-raised-button
+                color="primary"
+                (click)="abrirModalSuscripcion(plan, 'renovar')"
+                [disabled]="procesando">
+                <mat-icon>refresh</mat-icon>
+                Renovar Plan
+              </button>
+
+              <ng-container *ngIf="!esPlanActual(plan.nombre)">
+                <button
+                  *ngIf="!tienePlanActivo()"
+                  mat-raised-button
+                  color="primary"
+                  (click)="abrirModalSuscripcion(plan, 'crear')"
+                  [disabled]="procesando">
+                  <mat-icon>add_circle</mat-icon>
+                  Suscribirse
+                </button>
+
+                <ng-container *ngIf="tienePlanActivo()">
+                  <button
+                    *ngIf="puedeHacerUpgrade(plan.nombre)"
+                    mat-raised-button
+                    color="accent"
+                    (click)="abrirModalSuscripcion(plan, 'cambiar')"
+                    [disabled]="procesando">
+                    <mat-icon>upgrade</mat-icon>
+                    Upgrade a {{ plan.nombre }}
+                  </button>
+
+
+                  <button
+                    *ngIf="puedeHacerDowngrade(plan.nombre)"
+                    mat-stroked-button
+                    (click)="abrirModalSuscripcion(plan, 'cambiar')"
+                    [disabled]="procesando">
+                    <mat-icon>trending_down</mat-icon>
+                    Cambiar a {{ plan.nombre }}
+                  </button>
+                </ng-container>
+              </ng-container>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-card *ngIf="historialSuscripciones.length > 0" class="historial-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>history</mat-icon>
+          Historial de Suscripciones
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="historialSuscripciones" class="historial-table">
+
+            <ng-container matColumnDef="plan">
+              <th mat-header-cell *matHeaderCellDef>Plan</th>
+              <td mat-cell *matCellDef="let sus">
+                <mat-chip>
+                  <mat-icon matChipAvatar>{{ obtenerIconoPlan(sus.tipoplan) }}</mat-icon>
+                  {{ sus.tipoplan }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaInicio">
+              <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+              <td mat-cell *matCellDef="let sus">{{ formatearFecha(sus.fechainicio) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaFin">
+              <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+              <td mat-cell *matCellDef="let sus">{{ formatearFecha(sus.fechafin) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="duracion">
+              <th mat-header-cell *matHeaderCellDef>Duración</th>
+              <td mat-cell *matCellDef="let sus">{{ sus.descripcion }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let sus">
+                <mat-chip [color]="obtenerEstadoColor(sus.estado)" highlighted>
+                  {{ sus.estado }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <mat-card class="modal-content" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ planSeleccionado?.icono }}</mat-icon>
+        {{ obtenerTituloModal() }}
+      </mat-card-title>
+      <button mat-icon-button (click)="cerrarModal()" class="btn-cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="planSeleccionado">
+      <div class="modal-plan-info">
+        <h3>Plan {{ planSeleccionado.nombre }}</h3>
+        <div class="modal-precio">
+          <span class="precio-grande" *ngIf="planSeleccionado.precio > 0">
+            S/ {{ planSeleccionado.precio }}
+          </span>
+          <span class="precio-grande" *ngIf="planSeleccionado.precio === 0">
+            Gratis
+          </span>
+          <span class="precio-periodo">/ {{ planSeleccionado.duracion }}</span>
+        </div>
+        <mat-chip color="accent" highlighted class="modal-multiplicador">
+          <mat-icon matChipAvatar>bolt</mat-icon>
+          x{{ planSeleccionado.multiplicador }} Multiplicador de puntos
+        </mat-chip>
+      </div>
+
+      <mat-divider></mat-divider>
+      <div class="modal-beneficios">
+        <h4>Beneficios incluidos:</h4>
+        <mat-list>
+          <mat-list-item *ngFor="let beneficio of planSeleccionado.beneficios">
+            <mat-icon matListItemIcon color="primary">check_circle</mat-icon>
+            <span matListItemTitle>{{ beneficio }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+      <mat-divider></mat-divider>
+      <div class="modal-info-accion">
+        <!-- Upgrade -->
+        <mat-card *ngIf="tipoAccion === 'cambiar' && puedeHacerUpgrade(planSeleccionado.nombre)" class="info-card upgrade">
+          <mat-card-content>
+            <mat-icon color="primary">flash_on</mat-icon>
+            <p><strong>Upgrade inmediato:</strong> Tus nuevos beneficios se activarán inmediatamente.</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Downgrade -->
+        <mat-card *ngIf="tipoAccion === 'cambiar' && puedeHacerDowngrade(planSeleccionado.nombre)" class="info-card downgrade">
+          <mat-card-content>
+            <mat-icon color="accent">schedule</mat-icon>
+            <p><strong>Cambio programado:</strong> El cambio se aplicará al finalizar tu periodo actual.</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="tipoAccion === 'renovar'" class="info-card renovar">
+          <mat-card-content>
+            <mat-icon color="primary">refresh</mat-icon>
+            <p><strong>Renovación:</strong> Se extenderá tu suscripción por {{ planSeleccionado.duracion }} adicional.</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="tipoAccion === 'crear'" class="info-card crear">
+          <mat-card-content>
+            <mat-icon color="accent">new_releases</mat-icon>
+            <p><strong>Nueva suscripción:</strong> Disfruta de todos los beneficios desde hoy.</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card *ngIf="planSeleccionado.precio > 0" class="modal-pago">
+        <mat-card-content>
+          <mat-icon>credit_card</mat-icon>
+          <p>El pago se procesará de forma segura</p>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-button
+        (click)="cerrarModal()"
+        [disabled]="procesando">
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="confirmarAccion()"
+        [disabled]="procesando">
+        <mat-icon>{{ procesando ? 'hourglass_empty' : 'check' }}</mat-icon>
+        {{ procesando ? 'Procesando...' : 'Confirmar' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,119 @@
+<div class="login-fullscreen">
+  <!-- Lado Izquierdo -->
+  <div class="login-lado-izquierdo">
+    <div class="logo-grande">
+      <div class="logo-icon-grande">
+        <mat-icon>eco</mat-icon>
+      </div>
+      <h2>EcoTech</h2>
+    </div>
+    <h1>Bienvenido de vuelta</h1>
+    <p>Inicia sesión para continuar generando un impacto positivo en el medio ambiente.</p>
+  </div>
+
+
+  <div class="login-lado-derecho">
+    <mat-card class="login-card">
+      <mat-card-header>
+        <mat-card-title>Iniciar sesión</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form class="form-login" (submit)="onSubmit($event)">
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input
+              matInput
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              [disabled]="cargando"
+              required>
+            <mat-icon matPrefix>email</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              [type]="ocultarContrasena ? 'password' : 'text'"
+              [(ngModel)]="contrasena"
+              name="contrasena"
+              [disabled]="cargando"
+              required>
+            <mat-icon matPrefix>lock</mat-icon>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="ocultarContrasena = !ocultarContrasena">
+              <mat-icon>{{ ocultarContrasena ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <div class="form-options">
+            <mat-checkbox
+              [(ngModel)]="mantenerSesion"
+              name="mantenerSesion"
+              [disabled]="cargando"
+              color="primary">
+              Mantener sesión iniciada
+            </mat-checkbox>
+            <a href="#" class="link-olvidaste">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <mat-error *ngIf="error" class="mensaje-error">
+            <mat-icon>error</mat-icon>
+            {{ error }}
+          </mat-error>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="btn-continuar"
+            [disabled]="cargando">
+            <mat-icon>{{ cargando ? 'hourglass_empty' : 'login' }}</mat-icon>
+            {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+          </button>
+        </form>
+
+        <mat-divider class="divider-custom">
+          <span class="divider-text">O</span>
+        </mat-divider>
+
+
+        <div class="social-buttons">
+          <button mat-stroked-button class="btn-social btn-google">
+            <svg width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+            Continuar con Google
+          </button>
+
+          <button mat-stroked-button class="btn-social btn-github">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Continuar con GitHub
+          </button>
+        </div>
+
+        <!-- Link Registro -->
+        <p class="texto-registro">
+          ¿No tienes cuenta?
+          <a routerLink="/registro" class="link-registro">Regístrate</a>
+        </p>
+
+        <!-- Link Volver -->
+        <a routerLink="/" class="link-volver">
+          <mat-icon>arrow_back</mat-icon>
+          Volver al inicio
+        </a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

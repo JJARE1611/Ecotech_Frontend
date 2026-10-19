@@ -1,0 +1,313 @@
+.login-fullscreen {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ========== LADO IZQUIERDO ========== */
+.login-lado-izquierdo {
+  background: linear-gradient(135deg, #1a4d2e 0%, #0d2818 100%);
+  color: white;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo-grande {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 60px;
+}
+
+.logo-icon-grande {
+  width: 60px;
+  height: 60px;
+  background: #7fb843;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon-grande mat-icon {
+  font-size: 35px !important;
+  width: 35px !important;
+  height: 35px !important;
+  color: white;
+}
+
+.logo-grande h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.login-lado-izquierdo h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  line-height: 1.2;
+}
+
+.login-lado-izquierdo p {
+  font-size: 20px;
+  line-height: 1.6;
+  opacity: 0.9;
+  max-width: 500px;
+}
+
+/* ========== LADO DERECHO ========== */
+.login-lado-derecho {
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 550px;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.login-card mat-card-header {
+  padding: 24px 24px 0 !important;
+}
+
+.login-card mat-card-title {
+  font-size: 32px !important;
+  color: #1a1a1a;
+  font-weight: 700 !important;
+  margin: 0 0 24px 0 !important;
+}
+
+.login-card mat-card-content {
+  padding: 0 24px 24px !important;
+}
+
+/* ========== FORMULARIO ========== */
+.form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-login mat-form-field {
+  width: 100%;
+}
+
+/* ========== FORM OPTIONS ========== */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.link-olvidaste {
+  font-size: 14px;
+  color: #1a4d2e;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.link-olvidaste:hover {
+  color: #0d2818;
+  text-decoration: underline;
+}
+
+/* ========== MENSAJE DE ERROR ========== */
+.mensaje-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #ef5350;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.mensaje-error mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* ========== BOTÓN CONTINUAR ========== */
+.btn-continuar {
+  width: 100%;
+  margin-top: 10px !important;
+  padding: 12px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-continuar mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* ========== DIVIDER ========== */
+.divider-custom {
+  margin: 25px 0;
+  position: relative;
+  text-align: center;
+}
+
+.divider-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 0 15px;
+  color: #999;
+  font-size: 14px;
+}
+
+/* ========== BOTONES SOCIALES ========== */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-social {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  width: 100%;
+}
+
+.btn-github {
+  color: #333 !important;
+}
+
+/* ========== TEXTO REGISTRO ========== */
+.texto-registro {
+  margin-top: 25px;
+  font-size: 15px;
+  color: #666;
+  text-align: center;
+}
+
+.link-registro {
+  color: #1a4d2e;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.link-registro:hover {
+  color: #0d2818;
+  text-decoration: underline;
+}
+
+/* ========== LINK VOLVER ========== */
+.link-volver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  color: #666;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.link-volver mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.link-volver:hover {
+  color: #1a4d2e;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 968px) {
+  .login-fullscreen {
+    grid-template-columns: 1fr;
+  }
+
+  .login-lado-izquierdo {
+    padding: 40px 30px;
+    min-height: 300px;
+  }
+
+  .login-lado-izquierdo h1 {
+    font-size: 32px;
+  }
+
+  .login-lado-izquierdo p {
+    font-size: 16px;
+  }
+
+  .login-card {
+    max-width: 100%;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-lado-izquierdo {
+    padding: 30px 20px;
+  }
+
+  .login-lado-izquierdo h1 {
+    font-size: 28px;
+  }
+
+  .logo-grande h2 {
+    font-size: 24px;
+  }
+
+  .logo-icon-grande {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo-icon-grande mat-icon {
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .login-lado-derecho {
+    padding: 20px;
+  }
+
+  .login-card mat-card-title {
+    font-size: 24px !important;
+  }
+
+  .login-card mat-card-content {
+    padding: 0 16px 16px !important;
+  }
+}
